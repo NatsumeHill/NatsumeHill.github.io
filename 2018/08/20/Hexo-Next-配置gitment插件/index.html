@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Hexo Next 配置gitment插件" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="Hexo Next 配置gitment插件" height="28">
             
             </a>
         </div>
@@ -130,8 +130,8 @@
             
         </h1>
         <div class="content">
-            <h1 id="Gitment插件配置"><a href="#Gitment插件配置" class="headerlink" title="Gitment插件配置"></a>Gitment插件配置</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>由于笔者在定义文章名字时文章名太长，所以会导致评论初始化不成功。根据网上大佬的解答，是因为gitment产生的评论是通过github repo issue进行记录的。但是issue的label字符长度不能超过50。<br>而next主题默认label获取方式为：<strong>window.location.pathname</strong>，很容易超过长度限制。</p>
-<h2 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h2><p>还是根据网上大佬们提供的方案，可以对 <strong>window.location.pathname</strong> 的值进行MD5编码，这样得到的结果可以保证长度不超过限制。具体方法如下，这里我使用的Next主题版本为 <strong>6.3.0</strong></p>
+            <h2 id="Gitment插件配置"><a href="#Gitment插件配置" class="headerlink" title="Gitment插件配置"></a>Gitment插件配置</h2><h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>由于笔者在定义文章名字时文章名太长，所以会导致评论初始化不成功。根据网上大佬的解答，是因为gitment产生的评论是通过github repo issue进行记录的。但是issue的label字符长度不能超过50。<br>而next主题默认label获取方式为：<strong>window.location.pathname</strong>，很容易超过长度限制。</p>
+<h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><p>还是根据网上大佬们提供的方案，可以对 <strong>window.location.pathname</strong> 的值进行MD5编码，这样得到的结果可以保证长度不超过限制。具体方法如下，这里我使用的Next主题版本为 <strong>6.3.0</strong></p>
 <ul>
 <li><p>找到Next引入gitment的代码所在文件，在 <strong>6.3.0</strong>版本中该文件路径为：<strong>/next/layout/_third-party/comments/gitment.swig</strong></p>
 </li>
@@ -142,7 +142,7 @@
 
 </li>
 </ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
 <p><a href="https://www.v2ex.com/t/381246">https://www.v2ex.com/t/381246</a></p>
 </blockquote>
 
@@ -298,7 +298,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -317,7 +317,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -336,7 +336,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -355,7 +355,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -374,7 +374,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -525,7 +525,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -544,7 +544,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -563,7 +563,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -582,7 +582,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -601,7 +601,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -743,7 +743,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Hexo Next 配置gitment插件" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="Hexo Next 配置gitment插件" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="WAF攻防" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="WAF攻防" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -117,7 +121,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 minutes read (About 852 words)
+                    6 minutes read (About 849 words)
                 </span>
                 
                 
@@ -130,7 +134,7 @@
             
         </h1>
         <div class="content">
-            <h1 id="WAF攻防"><a href="#WAF攻防" class="headerlink" title="WAF攻防"></a>WAF攻防</h1><h2 id="架构层绕过WAF"><a href="#架构层绕过WAF" class="headerlink" title="架构层绕过WAF"></a>架构层绕过WAF</h2><h3 id="寻找源站"><a href="#寻找源站" class="headerlink" title="寻找源站"></a>寻找源站</h3><p>当前多数云WAF架构，例如百度云加速、360安全卫士等，通过更改DNS解析，把流量引入WAF集群，流量经过检测后转发请求到源站。如图，liusscs.com接入接入WAF后，liusscs.comd的DNS解析结果指向WAF集群，用户的请求将发送给WAF集群，WAF集群经过检测认为非攻击请求再转发给源站。<br>从云WAF架构考虑，如果HTTP请求都没有经过WAF集群直接到达源站，顺理成章bypass WAF。所以关键在于发现源站的IP地址。常用方法如下，可能还有很多很多思路：</p>
+            <h2 id="架构层绕过WAF"><a href="#架构层绕过WAF" class="headerlink" title="架构层绕过WAF"></a>架构层绕过WAF</h2><h3 id="寻找源站"><a href="#寻找源站" class="headerlink" title="寻找源站"></a>寻找源站</h3><p>当前多数云WAF架构，例如百度云加速、360安全卫士等，通过更改DNS解析，把流量引入WAF集群，流量经过检测后转发请求到源站。如图，liusscs.com接入接入WAF后，liusscs.comd的DNS解析结果指向WAF集群，用户的请求将发送给WAF集群，WAF集群经过检测认为非攻击请求再转发给源站。<br>从云WAF架构考虑，如果HTTP请求都没有经过WAF集群直接到达源站，顺理成章bypass WAF。所以关键在于发现源站的IP地址。常用方法如下，可能还有很多很多思路：</p>
 <ol>
 <li><p>信息泄露发现源站IP。信息泄露的途径很多，细心留言往往能发现。常用的方法如下：</p>
 <ul>
@@ -281,6 +285,42 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#架构层绕过WAF">
+        <span class="has-mr-6">1</span>
+        <span>架构层绕过WAF</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#寻找源站">
+        <span class="has-mr-6">1.1</span>
+        <span>寻找源站</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用同网段">
+        <span class="has-mr-6">1.2</span>
+        <span>利用同网段</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用边界漏洞">
+        <span class="has-mr-6">1.3</span>
+        <span>利用边界漏洞</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#资源限制角度绕过WAF">
+        <span class="has-mr-6">2</span>
+        <span>资源限制角度绕过WAF</span>
+        </a></li><li>
+        <a class="is-flex" href="#协议层面绕过WAF的检测">
+        <span class="has-mr-6">3</span>
+        <span>协议层面绕过WAF的检测</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -304,7 +344,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -323,7 +363,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -342,7 +382,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -361,7 +401,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -380,7 +420,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -531,7 +571,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -550,7 +590,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -569,7 +609,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -588,7 +628,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -607,7 +647,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -749,7 +789,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="WAF攻防" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="WAF攻防" height="28">
                 
                 </a>
                 <p class="is-size-7">

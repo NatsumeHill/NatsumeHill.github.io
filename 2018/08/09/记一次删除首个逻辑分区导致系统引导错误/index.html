@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="记一次删除首个逻辑分区导致系统引导错误" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="记一次删除首个逻辑分区导致系统引导错误" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -117,7 +121,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 minutes read (About 664 words)
+                    4 minutes read (About 657 words)
                 </span>
                 
                 
@@ -130,7 +134,7 @@
             
         </h1>
         <div class="content">
-            <h1 id="记一次误删分区"><a href="#记一次误删分区" class="headerlink" title="记一次误删分区"></a>记一次误删分区</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>事情的经过是这样，由于在安装Ubuntu/Windows7双系统时，Ubuntu分区规划不合理，导致在使用过程中/home目录空间严重不足。以下是我的分区方案：</p>
+            <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>事情的经过是这样，由于在安装Ubuntu/Windows7双系统时，Ubuntu分区规划不合理，导致在使用过程中/home目录空间严重不足。以下是我的分区方案：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 4096 bytes</span><br><span class="line">I/O size (minimum/optimal): 4096 bytes / 4096 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x00003702</span><br><span class="line"></span><br><span class="line">Device     Boot     Start       End   Sectors   Size Id Type</span><br><span class="line">/dev/sda1  *         2048    206847    204800   100M  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda2          206848 209717247 209510400  99.9G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda3       209717248 588597247 378880000 180.7G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda4       588599294 976771071 388171778 185.1G  f W95 Ext'd (LBA)</span><br><span class="line">/dev/sda5       588599296 767055871 178456576  85.1G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda6       767057920 782680063  15622144   7.5G 82 Linux swap / Sol</span><br><span class="line">/dev/sda7       782682112 852680703  69998592  33.4G 83 Linux</span><br><span class="line">/dev/sda8       852682752 976771071 124088320  59.2G 83 Linux</span><br><span class="line"></span><br><span class="line">Partition 4 does not start on physical sector boundary.</span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/partition.png" alt="分区"></p>
@@ -267,6 +271,26 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#问题">
+        <span class="has-mr-6">1</span>
+        <span>问题</span>
+        </a></li><li>
+        <a class="is-flex" href="#解决方案">
+        <span class="has-mr-6">2</span>
+        <span>解决方案</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -290,7 +314,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -309,7 +333,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -328,7 +352,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -347,7 +371,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -366,7 +390,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -517,7 +541,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -536,7 +560,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -555,7 +579,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -574,7 +598,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -593,7 +617,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -735,7 +759,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="记一次删除首个逻辑分区导致系统引导错误" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="记一次删除首个逻辑分区导致系统引导错误" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="数据库事务" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="数据库事务" height="28">
             
             </a>
         </div>
@@ -113,7 +113,7 @@
     
     <div class="card-image">
         <span  class="image is-7by1">
-            <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+            <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
         </span>
     </div>
     
@@ -127,7 +127,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 minutes read (About 513 words)
+                    3 minutes read (About 516 words)
                 </span>
                 
                 
@@ -140,13 +140,13 @@
             
         </h1>
         <div class="content">
-            <h1 id="Mysql事务模型"><a href="#Mysql事务模型" class="headerlink" title="Mysql事务模型"></a>Mysql事务模型</h1><p>Mysql中的InnoDB引擎支持事务,InnoDB支持四个标准定义的事务隔离级别: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, and SERIALIZABLE.默认的隔离级别是REPEATABLE READ.</p>
+            <h2 id="Mysql事务模型"><a href="#Mysql事务模型" class="headerlink" title="Mysql事务模型"></a>Mysql事务模型</h2><p>Mysql中的InnoDB引擎支持事务,InnoDB支持四个标准定义的事务隔离级别: READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, and SERIALIZABLE.默认的隔离级别是REPEATABLE READ.</p>
 <p>在InnoDB中，所有用户活动都发生在事务中。如果启用了autocommit模式，则每个SQL语句自己形成一个事务。默认情况下，MySQL中的每一个连接的Session开启autocommit，因此如果该语句没有返回错误，MySQL会在每个SQL语句后执行提交。如果语句返回错误，则提交或回滚行为取决于错误类型。</p>
 <p>启用了自动提交的会话可以通过使用显式START TRANSACTION或BEGIN语句启动它并以COMMIT或ROLLBACK语句结束它来执行多语句事务。</p>
 <p>如果在SET autocommit = 0的会话中禁用了自动提交模式，则会话始终打开一个事务。 COMMIT或ROLLBACK语句结束当前事务并启动新事务.</p>
 <p>如果Session中 autocommit 被禁用并且结束时未显式提交最终事务，则MySQL将回滚该事务。</p>
 <p>某些语句隐式结束事务，就像您在执行语句之前完成了一个COMMIT一样。</p>
-<h1 id="JDBC事务"><a href="#JDBC事务" class="headerlink" title="JDBC事务"></a>JDBC事务</h1><p>如果JDBC连接处于自动提交模式，默认情况下，则每个SQL语句在完成后都会提交到数据库。要启用手动事务支持，而不是使用JDBC驱动程序默认使用的自动提交模式，请调用Connection对象的setAutoCommit()方法。 如果将布尔的false传递给setAutoCommit()，则关闭自动提交。 也可以传递一个布尔值true来重新打开它。</p>
+<h2 id="JDBC事务"><a href="#JDBC事务" class="headerlink" title="JDBC事务"></a>JDBC事务</h2><p>如果JDBC连接处于自动提交模式，默认情况下，则每个SQL语句在完成后都会提交到数据库。要启用手动事务支持，而不是使用JDBC驱动程序默认使用的自动提交模式，请调用Connection对象的setAutoCommit()方法。 如果将布尔的false传递给setAutoCommit()，则关闭自动提交。 也可以传递一个布尔值true来重新打开它。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conn.setAutoCommit(<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
 
 <p>完成更改后，若要提交更改，那么可在连接对象上调用commit()方法，如下所示：</p>
@@ -154,9 +154,7 @@
 <p>否则，要使用连接名为conn的数据库回滚更新，请使用以下代码 -</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conn.rollback( );</span><br></pre></td></tr></table></figure>
 
-
-
-
+<p><a style="background-color:black;color:white;text-decoration:none;padding:4px 6px;font-family:-apple-system, BlinkMacSystemFont, &quot;San Francisco&quot;, &quot;Helvetica Neue&quot;, Helvetica, Ubuntu, Roboto, Noto, &quot;Segoe UI&quot;, Arial, sans-serif;font-size:12px;font-weight:bold;line-height:1.2;display:inline-block;border-radius:3px" href="https://unsplash.com/@cgower?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge" target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Christopher Gower"><span style="display:inline-block;padding:2px 3px"><svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-2px;fill:white" viewBox="0 0 32 32"><title>unsplash-logo</title><path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z"></path></svg></span><span style="display:inline-block;padding:2px 3px">Christopher Gower</span></a></p>
 
         </div>
         
@@ -323,7 +321,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -342,7 +340,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -361,7 +359,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -380,7 +378,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -399,7 +397,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -550,7 +548,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -569,7 +567,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -588,7 +586,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -607,7 +605,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -626,7 +624,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -768,7 +766,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="数据库事务" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="数据库事务" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -118,6 +118,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="image is-7by1">
+            <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -128,7 +134,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 minutes read (About 1127 words)
+                    8 minutes read (About 1130 words)
                 </span>
                 
                 
@@ -141,47 +147,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="搭建Swarm集群"><a href="#搭建Swarm集群" class="headerlink" title="搭建Swarm集群"></a>搭建Swarm集群</h1><h2 id="Swarm简介"><a href="#Swarm简介" class="headerlink" title="Swarm简介"></a>Swarm简介</h2><p><strong>Swarm</strong>指一组运行Docker并加入群集的计算机。针对一个Swarm，之前使用的Docker命令，现在由<strong>Swarm Manager</strong>在群集上执行。Swarm中的机器可以是物理的或虚拟的。加入群组后，它们被称为节点。</p>
-<p>Swarm管理器可以使用多种策略来运行容器，例如“emptiest node” —— 它使用容器填充利用率最低的机器。或“global”，它确保每台机器只获得指定容器的一个实例。您可以指示Swarm Manager使用Compose文件中配置的策略，正如在上一篇文章所描述的那样。</p>
-<p>Swarm Manager是Swarm中唯一可以执行命令的机器，或授权其他机器作为Worker加入Swarm。worker只是在那里提供资源，并且没有权力告诉任何其他机器它能做什么和不能做什么。</p>
-<p>到目前为止，我们一直在本地计算机上以单主机模式使用Docker。但是Docker也可以切换到swarm模式。立即启用swarm mod使当前计算机成为swarm manager。这样，Docker就会运行您在管理的swarm上执行的命令，而不仅仅是在当前机器上。</p>
-<h2 id="创建Swarm"><a href="#创建Swarm" class="headerlink" title="创建Swarm"></a>创建Swarm</h2><p>一个Swarm由多个节点组成，这些节点可以是物理的计算机，也可以是虚拟的。最简单的方式是使用命令 <strong>docker swarm init</strong>初始化当前计算机为swarm manager。然后让其他计算机加入到创建的swarm。另一中方式是创建虚拟的swarm。这里我们创建一个具有两个虚拟节点的swarm。</p>
-<ol>
-<li><p>创建虚拟节点</p>
-<p> 使用 <strong>docker-machine</strong>工具创建两个虚拟节点：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create --driver virtualbox myvm1</span><br><span class="line">docker-machine create --driver virtualbox myvm2</span><br></pre></td></tr></table></figure></li>
-<li><p>初始化swarm并添加节点</p>
-<p> 将myvm1配置为swarm manager，用于执行management commands，注册worker。设置myvm2为worker。</p>
-<p> 这里，利用命令 <strong>docker-machine ssh</strong>发送指令给虚拟机。</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker-machine ssh myvm1 <span class="string">"docker swarm init --advertise-addr &lt;myvm1 ip&gt;"</span></span></span><br><span class="line">Swarm initialized: current node &lt;node ID&gt; is now a manager.</span><br><span class="line"></span><br><span class="line">To add a worker to this swarm, run the following command:</span><br><span class="line"></span><br><span class="line">docker swarm join \</span><br><span class="line">--token &lt;token&gt; \</span><br><span class="line">&lt;myvm ip&gt;:&lt;port&gt;</span><br><span class="line"></span><br><span class="line">To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.</span><br></pre></td></tr></table></figure>
-
-<p> 注意替换ip地址。然后将myvm2添加到swarm中：</p>
- <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker-machine ssh myvm2 <span class="string">"docker swarm join \</span></span></span><br><span class="line">--token &lt;token&gt; \</span><br><span class="line">&lt;ip&gt;:2377"</span><br><span class="line"></span><br><span class="line">This node joined a swarm as a worker.</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>部署App到Swarm</p>
-<p>首先，需要切换环境变量，以便使用shell发送指令给swarm manager：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(docker-machine env myvm1)</span><br></pre></td></tr></table></figure>
-
-<p>跟前一篇文章类似，使用以下命令部署app：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack deploy -c docker-compose.yml getstartedlab</span><br></pre></td></tr></table></figure>
-
-<p>需要注意的是，我们前面创建的镜像并没有注册到远程镜像库，所以使用上面的命令部署app，会找不到镜像。可以通过在myvm1,myvm2中分别构建镜像来解决这个问题。</p>
-</li>
-</ol>
-<h2 id="Cleanup-and-reboot"><a href="#Cleanup-and-reboot" class="headerlink" title="Cleanup and reboot"></a>Cleanup and reboot</h2><h3 id="Stacks-and-swarms"><a href="#Stacks-and-swarms" class="headerlink" title="Stacks and swarms"></a>Stacks and swarms</h3><p>可以使用一下命令关闭stack：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack rm getstartedlab</span><br></pre></td></tr></table></figure>
-
-<h3 id="恢复环境变量"><a href="#恢复环境变量" class="headerlink" title="恢复环境变量"></a>恢复环境变量</h3><p>可以通过以下命令恢复环境变量：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval $(docker-machine env -u)</span><br></pre></td></tr></table></figure>
-
-<h2 id="Recap-and-cheat-sheet-optional"><a href="#Recap-and-cheat-sheet-optional" class="headerlink" title="Recap and cheat sheet (optional)"></a>Recap and cheat sheet (optional)</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create --driver virtualbox myvm1 # Create a VM (Mac, Win7, Linux)</span><br><span class="line">docker-machine create -d hyperv --hyperv-virtual-switch "myswitch" myvm1 # Win10</span><br><span class="line">docker-machine env myvm1                # View basic information about your node</span><br><span class="line">docker-machine ssh myvm1 "docker node ls"         # List the nodes in your swarm</span><br><span class="line">docker-machine ssh myvm1 "docker node inspect &lt;node ID&gt;"        # Inspect a node</span><br><span class="line">docker-machine ssh myvm1 "docker swarm join-token -q worker"   # View join token</span><br><span class="line">docker-machine ssh myvm1   # Open an SSH session with the VM; type "exit" to end</span><br><span class="line">docker node ls                # View nodes in swarm (while logged on to manager)</span><br><span class="line">docker-machine ssh myvm2 "docker swarm leave"  # Make the worker leave the swarm</span><br><span class="line">docker-machine ssh myvm1 "docker swarm leave -f" # Make master leave, kill swarm</span><br><span class="line">docker-machine ls # list VMs, asterisk shows which VM this shell is talking to</span><br><span class="line">docker-machine start myvm1            # Start a VM that is currently not running</span><br><span class="line">docker-machine env myvm1      # show environment variables and command for myvm1</span><br><span class="line">eval $(docker-machine env myvm1)         # Mac command to connect shell to myvm1</span><br><span class="line">&amp; "C:\Program Files\Docker\Docker\Resources\bin\docker-machine.exe" env myvm1 | Invoke-Expression   # Windows command to connect shell to myvm1</span><br><span class="line">docker stack deploy -c &lt;file&gt; &lt;app&gt;  # Deploy an app; command shell must be set to talk to manager (myvm1), uses local Compose file</span><br><span class="line">docker-machine scp docker-compose.yml myvm1:~ # Copy file to node's home dir (only required if you use ssh to connect to manager and deploy the app)</span><br><span class="line">docker-machine ssh myvm1 "docker stack deploy -c &lt;file&gt; &lt;app&gt;"   # Deploy an app using ssh (you must have first copied the Compose file to myvm1)</span><br><span class="line">eval $(docker-machine env -u)     # Disconnect shell from VMs, use native docker</span><br><span class="line">docker-machine stop $(docker-machine ls -q)               # Stop all running VMs</span><br><span class="line">docker-machine rm $(docker-machine ls -q) # Delete all VMs and their disk images</span><br></pre></td></tr></table></figure>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://docs.docker.com/get-started/part4/#recap-and-cheat-sheet-optional">https://docs.docker.com/get-started/part4/#recap-and-cheat-sheet-optional</a></p>
-</blockquote>
-
+            <b>Swarm</b>指一组运行Docker并加入群集的计算机。针对一个Swarm，之前使用的Docker命令，现在由Swarm Manager在群集上执行。Swarm中的机器可以是物理的或虚拟的。加入群组后，它们被称为节点。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -197,6 +173,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="image is-7by1">
+            <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -207,7 +189,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 minutes read (About 1393 words)
+                    9 minutes read (About 1396 words)
                 </span>
                 
                 
@@ -220,60 +202,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="以服务方式运行容器"><a href="#以服务方式运行容器" class="headerlink" title="以服务方式运行容器"></a>以服务方式运行容器</h1><h2 id="About-services"><a href="#About-services" class="headerlink" title="About services"></a>About services</h2><p>在分布式应用程序中，应用程序的不同部分称为“服务”。例如，想象一个视频共享站点，它可能包括一个用于将应用程序数据存储在数据库中的服务，一个用于在后台进行视频转码的服务。用户上传内容，前端服务等。服务实际上只是“生产环境中的容器”。服务只运行一个映像，但它编码了映像的运行方式 —— 它应该使用哪些端口，应该运行多少个容器副本，以便服务具有所需的容量等等。扩展服务会更改运行该软件的容器实例的数量，从而为流程中的服务分配更多计算资源。幸运的是，使用Docker平台定义，运行和扩展服务非常容易 —— 只需编写一个docker-compose.yml文件即可。</p>
-<p>##　创建第一个docker-compose.yml</p>
-<p>docker-compose.yml文件是一个YAML文件，用于定义Docker容器在生产环境中的行为方式。</p>
-<p><strong>docker-compose.yml</strong></p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"3"</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="comment"># replace username/repo:tag with your name and image details</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">username/repo:tag</span></span><br><span class="line">    <span class="attr">deploy:</span></span><br><span class="line">      <span class="attr">replicas:</span> <span class="number">5</span></span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">limits:</span></span><br><span class="line">          <span class="attr">cpus:</span> <span class="string">"0.1"</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">50M</span></span><br><span class="line">      <span class="attr">restart_policy:</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">on-failure</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">"4000:80"</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">webnet</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">  <span class="attr">webnet:</span></span><br></pre></td></tr></table></figure>
-
-<p>你可以将docker-compose.yml保存到任何地方。确保文件中的镜像名username/repo:tag替换为你想要的镜像，这个镜像是在镜像库中注册过的。</p>
-<p>这个docker-compose.yml文件告诉Docker执行以下操作：</p>
-<ul>
-<li>从注册表中提取镜像；</li>
-<li>将该镜像的5个实例作为名为web的服务运行，限制每个实例使用最多10％的CPU（跨所有核心）和50MB的RAM;</li>
-<li>如果一个失败，立即重启容器;</li>
-<li>将主机上的端口4000映射到Web的端口80;</li>
-<li>指示Web容器通过称为webnet的负载平衡网络共享端口80.（在内部，容器本身在短暂的端口发布到web的端口80.）</li>
-<li>使用默认设置（负载平衡的覆盖网络）定义Webnet网络.</li>
-</ul>
-<h2 id="运行负载均衡后的App"><a href="#运行负载均衡后的App" class="headerlink" title="运行负载均衡后的App"></a>运行负载均衡后的App</h2><p>在我们使用docker stack deploy命令之前，我们首先运行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker swarm init</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Note: 后面的文章中会详细介绍　<strong>swarm</strong>。如果您没有运行docker swarm init，则会收到“this node is not a swarm manager.”错误。</p>
-</blockquote>
-<p>现在可以运行这个应用了。您需要为您的应用程序命名。在这里，它被设置为getstartedlab：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack deploy -c docker-compose.yml getstartedlab</span><br></pre></td></tr></table></figure>
-
-<p>我们的单个服务堆栈在一台主机上运行已部署了镜像的5个容器实例。通过一下方式，可以查看服务的ID:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker service ls</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">###########OUT PUT:</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~/tmp                                                                                                             (18:09:24)  </span></span><br><span class="line">ζ docker service ls</span><br><span class="line"></span><br><span class="line">ID                  NAME                MODE                REPLICAS            IMAGE                  PORTS</span><br><span class="line">j6c3ps594ky1        getstartedlab_web   replicated          5/5                 friendlyhello:latest   *:4000-&gt;80/tcp</span><br></pre></td></tr></table></figure>
-
-<p>在服务中运行的单个容器称为任务。任务被赋予以数字递增的唯一ID，最多为您在docker-compose.yml中定义的副本数。列出您的服务任务：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker service ps getstartedlab_web</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#########OUT PUT############</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~/tmp                                                                                                             (18:09:26)  </span></span><br><span class="line">ζ docker service ps getstartedlab_web</span><br><span class="line"></span><br><span class="line">ID                  NAME                  IMAGE                  NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS</span><br><span class="line">owxqt9zjb4hb        getstartedlab_web.1   friendlyhello:latest   fangkui-linux       Running             Running 2 minutes ago                       </span><br><span class="line">z5lm26k0ar4u        getstartedlab_web.2   friendlyhello:latest   fangkui-linux       Running             Running 2 minutes ago                       </span><br><span class="line">n4p8qtrhiegy        getstartedlab_web.3   friendlyhello:latest   fangkui-linux       Running             Running 2 minutes ago                       </span><br><span class="line">npzdltqqw9gb        getstartedlab_web.4   friendlyhello:latest   fangkui-linux       Running             Running 2 minutes ago                       </span><br><span class="line">n805z6c2smxn        getstartedlab_web.5   friendlyhello:latest   fangkui-linux       Running             Running 2 minutes ago</span><br></pre></td></tr></table></figure>
-
-<p>如果您只列出系统上的所有容器，则任务也会显示，但不会被服务过滤：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~/tmp                                                                                                             (18:11:57)  </span></span><br><span class="line">ζ docker container ls                                                                                                                                       </span><br><span class="line">CONTAINER ID        IMAGE                  COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">0c06e54d2901        friendlyhello:latest   "python app.py"     3 minutes ago       Up 3 minutes        80/tcp              getstartedlab_web.4.npzdltqqw9gbgailbd7o09xcu</span><br><span class="line">64165df37b26        friendlyhello:latest   "python app.py"     3 minutes ago       Up 3 minutes        80/tcp              getstartedlab_web.1.owxqt9zjb4hbgc1zw5r00wzr2</span><br><span class="line">fadfb984875b        friendlyhello:latest   "python app.py"     3 minutes ago       Up 3 minutes        80/tcp              getstartedlab_web.5.n805z6c2smxnmuuqf8runhnnd</span><br><span class="line">c00f89869c3e        friendlyhello:latest   "python app.py"     3 minutes ago       Up 3 minutes        80/tcp              getstartedlab_web.2.z5lm26k0ar4ua9b36qbkql0uy</span><br><span class="line">28fe2522ca5c        friendlyhello:latest   "python app.py"     3 minutes ago       Up 3 minutes        80/tcp              getstartedlab_web.3.n4p8qtrhiegyrhzbju7omemy3</span><br></pre></td></tr></table></figure>
-
-<p>您可以连续多次运行curl -4 http：// localhost：4000，或者在浏览器中转到该URL并点击刷新几次。</p>
-<p>无论哪种方式，容器ID都会发生变化，从而证明负载均衡;对于每个请求，以循环方式选择5个任务中的一个来响应。容器ID与上一个命令（docker container ls -q）的输出匹配。</p>
-<h2 id="扩展App"><a href="#扩展App" class="headerlink" title="扩展App"></a>扩展App</h2><p>您可以通过更改docker-compose.yml中的副本值来保存更改，并重新运行docker stack deploy命令来扩展应用程序：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack deploy -c docker-compose.yml getstartedlab</span><br></pre></td></tr></table></figure>
-
-<p>Docker执行就地更新，无需首先拆除堆栈或杀死任何容器。现在，重新运行docker container ls -q以查看已重新配置的已部署实例。如果放大副本，则会启动更多任务，从而启动更多容器。</p>
-<h2 id="关闭App和Swarm"><a href="#关闭App和Swarm" class="headerlink" title="关闭App和Swarm"></a>关闭App和Swarm</h2><p>关闭App:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stack rm getstartedlab</span><br></pre></td></tr></table></figure>
-
-<p>关闭swarm:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker swarm leave --force</span><br></pre></td></tr></table></figure>
-
-<h2 id="Recap-and-cheat-sheet-optional"><a href="#Recap-and-cheat-sheet-optional" class="headerlink" title="Recap and cheat sheet (optional)"></a>Recap and cheat sheet (optional)</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker stack ls                                            # List stacks or apps</span><br><span class="line">docker stack deploy -c &lt;composefile&gt; &lt;appname&gt;  # Run the specified Compose file</span><br><span class="line">docker service ls                 # List running services associated with an app</span><br><span class="line">docker service ps &lt;service&gt;                  # List tasks associated with an app</span><br><span class="line">docker inspect &lt;task or container&gt;                   # Inspect task or container</span><br><span class="line">docker container ls -q                                      # List container IDs</span><br><span class="line">docker stack rm &lt;appname&gt;                             # Tear down an application</span><br><span class="line">docker swarm leave --force      # Take down a single node swarm from the manager</span><br></pre></td></tr></table></figure>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://docs.docker.com/get-started/part3/#recap-and-cheat-sheet-optional">https://docs.docker.com/get-started/part3/#recap-and-cheat-sheet-optional</a></p>
-</blockquote>
-
+            在分布式应用程序中，应用程序的不同部分称为“服务”。例如，想象一个视频共享站点，它可能包括一个用于将应用程序数据存储在数据库中的服务，一个用于在后台进行视频转码的服务。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -289,6 +228,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%BA%8C%E7%AF%87%EF%BC%88Container%EF%BC%89/" class="image is-7by1">
+            <img class="thumbnail" src="https://unsplash.com/photos/aL6tG-j-E4Y/download?force=true" alt="Docker入门-第二篇（Container）">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -299,7 +244,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 minutes read (About 1259 words)
+                    8 minutes read (About 1262 words)
                 </span>
                 
                 
@@ -312,51 +257,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="创建自己的Docker镜像"><a href="#创建自己的Docker镜像" class="headerlink" title="创建自己的Docker镜像"></a>创建自己的Docker镜像</h1><h2 id="变化"><a href="#变化" class="headerlink" title="变化"></a>变化</h2><p>在过去，如果您要开始编写Python应用程序，那么您的第一个任务是在您的计算机上安装Python运行时。但是，这会导致您的计算机上的环境需要非常适合您的应用程序按预期运行，并且还需要与您的生产环境相匹配。</p>
-<p>使用Docker，您可以将可移植的Python运行时作为镜像，无需安装。您可以在构建的过程中，将应用及其依赖的基础python镜像打包，确保应用可以正确运行。</p>
-<p>这些可移植镜像由称为<strong>Dockerfile</strong>的文件定义。</p>
-<h2 id="利用Dockerfile创建容器"><a href="#利用Dockerfile创建容器" class="headerlink" title="利用Dockerfile创建容器"></a>利用Dockerfile创建容器</h2><p>Dockerfile定义容器内环境中发生的事情。对网络接口和磁盘驱动器等资源的访问在此环境中进行虚拟化，该环境与系统的其他部分隔离，因此您需要将端口映射到外部世界，并具体说明要“复制”哪些文件到容器环境。但是，执行此操作后，您可以预期此Dockerfile中定义的应用程序的构建在其运行的任何位置都会完全相同。</p>
-<h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>创建一个空目录。将目录（cd）更改为新目录，创建名为Dockerfile的文件，将以下内容复制并粘贴到该文件中，然后保存：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use an official Python runtime as a parent image</span></span><br><span class="line"><span class="keyword">FROM</span> python:<span class="number">2.7</span>-slim</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the working directory to /app</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="bash"> /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Copy the current directory contents into the container at /app</span></span><br><span class="line"><span class="keyword">ADD</span><span class="bash"> . /app</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Install any needed packages specified in requirements.txt</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> pip install --trusted-host pypi.python.org -r requirements.txt</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Make port 80 available to the world outside this container</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Define environment variable</span></span><br><span class="line"><span class="keyword">ENV</span> NAME World</span><br><span class="line"></span><br><span class="line"><span class="comment"># Run app.py when the container launches</span></span><br><span class="line"><span class="keyword">CMD</span><span class="bash"> [<span class="string">"python"</span>, <span class="string">"app.py"</span>]</span></span><br></pre></td></tr></table></figure>
-
-<p>这个Dockerfile引用了我们尚未创建的几个文件，即app.py和requirements.txt。接下来创建这个两个文件。</p>
-<h3 id="应用实现"><a href="#应用实现" class="headerlink" title="应用实现"></a>应用实现</h3><p>在这里，我们继续创建两个文件，分别为requirements.txt，app.py。app.py是应用程序业务逻辑的实现，requirements.txt中的内容是应用所依赖的python包。将这两个文件放在与Dockerfile的同一个文件夹下。两个文件内容如下：</p>
-<p><strong>requirements.txt</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Flask</span><br><span class="line">Redis</span><br></pre></td></tr></table></figure>
-
-<p><strong>app.py</strong></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> redis <span class="keyword">import</span> Redis, RedisError</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># Connect to Redis</span></span><br><span class="line">redis = Redis(host=<span class="string">"redis"</span>, db=<span class="number">0</span>, socket_connect_timeout=<span class="number">2</span>, socket_timeout=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route("/")</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        visits = redis.incr(<span class="string">"counter"</span>)</span><br><span class="line">    <span class="keyword">except</span> RedisError:</span><br><span class="line">        visits = <span class="string">"&lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;"</span></span><br><span class="line"></span><br><span class="line">    html = <span class="string">"&lt;h3&gt;Hello &#123;name&#125;!&lt;/h3&gt;"</span> \</span><br><span class="line">           <span class="string">"&lt;b&gt;Hostname:&lt;/b&gt; &#123;hostname&#125;&lt;br/&gt;"</span> \</span><br><span class="line">           <span class="string">"&lt;b&gt;Visits:&lt;/b&gt; &#123;visits&#125;"</span></span><br><span class="line">    <span class="keyword">return</span> html.format(name=os.getenv(<span class="string">"NAME"</span>, <span class="string">"world"</span>), hostname=socket.gethostname(), visits=visits)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    app.run(host=<span class="string">'0.0.0.0'</span>, port=<span class="number">80</span>)</span><br></pre></td></tr></table></figure>
-
-<p>现在我们看到pip install -r requirements.txt为Python安装了Flask和Redis库，应用程序打印环境变量NAME，以及对socket.gethostname（）的调用输出。最后，因为Redis没有运行（因为我们只安装了Python库，而不是Redis本身），这样在尝试使用Redis时会抛出错误。</p>
-<h3 id="构建应用"><a href="#构建应用" class="headerlink" title="构建应用"></a>构建应用</h3><p>现在我们已经准备好构建应用程序。确保您仍处于新目录的顶层。确保当你执行 <strong>ls</strong> 命令时，输出内容如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ls</span></span><br><span class="line">Dockerfile		app.py			requirements.txt</span><br></pre></td></tr></table></figure>
-
-<p>现在运行build命令。这将创建一个Docker镜像，这里使用 -t 参数为新构建的镜像命名。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t friendlyhello .</span><br></pre></td></tr></table></figure>
-
-<p>现在可以在本地Docker镜像库中查看到我们构建的镜像：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~/tmp</span></span><br><span class="line">ζ docker images</span><br><span class="line"></span><br><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">friendlyhello       latest              8c89b7cb2e32        3 days ago          132MB</span><br><span class="line">python              2.7-slim            40792d8a2d6d        3 weeks ago         120MB</span><br><span class="line">hello-world         latest              2cb0d9787c4d        6 weeks ago         1.85kB</span><br></pre></td></tr></table></figure>
-
-<h3 id="运行创建的镜像"><a href="#运行创建的镜像" class="headerlink" title="运行创建的镜像"></a>运行创建的镜像</h3><p>运行应用程序，使用-p将计算机的端口4000映射到容器的已发布端口80：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 4000:80 friendlyhello</span><br></pre></td></tr></table></figure>
-
-<p>使用curl访问app，运行结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~</span></span><br><span class="line">ζ curl http://localhost:4000/</span><br><span class="line">&lt;h3&gt;Hello World!&lt;/h3&gt;&lt;b&gt;Hostname:&lt;/b&gt; 1e4ace406b41&lt;br/&gt;&lt;b&gt;Visits:&lt;/b&gt; &lt;i&gt;cannot connect to Redis, counter disabled&lt;/i&gt;</span><br></pre></td></tr></table></figure>
-
-<p>可以通过添加-d选项，让容器运行于后台：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 4000:80 friendlyhello</span><br><span class="line"></span><br><span class="line">717fd03233dc6084724d13c18707b8d5c67694f8001b2f26724adce4216ac5df</span><br></pre></td></tr></table></figure>
-
-<p>您可以使用docker container ls查看缩写的容器ID：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> fangkui@fangkui-linux: ~/tmp                                                                           (17:33:45)  </span></span><br><span class="line">ζ docker container ls</span><br><span class="line"></span><br><span class="line">CONTAINER ID        IMAGE                  COMMAND             CREATED             STATUS              PORTS                  NAMES</span><br><span class="line">717fd03233dc        friendlyhello:latest   "python app.py"     40 seconds ago      Up 38 seconds       0.0.0.0:4000-&gt;80/tcp   romantic_einstein</span><br></pre></td></tr></table></figure>
-
-<h3 id="Recap-and-cheat-sheet-optional"><a href="#Recap-and-cheat-sheet-optional" class="headerlink" title="Recap and cheat sheet (optional)"></a>Recap and cheat sheet (optional)</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">docker build -t friendlyhello .  # Create image using this directory's Dockerfile</span><br><span class="line">docker run -p 4000:80 friendlyhello  # Run "friendlyname" mapping port 4000 to 80</span><br><span class="line">docker run -d -p 4000:80 friendlyhello         # Same thing, but in detached mode</span><br><span class="line">docker container ls                                # List all running containers</span><br><span class="line">docker container ls -a             # List all containers, even those not running</span><br><span class="line">docker container stop &lt;hash&gt;           # Gracefully stop the specified container</span><br><span class="line">docker container kill &lt;hash&gt;         # Force shutdown of the specified container</span><br><span class="line">docker container rm &lt;hash&gt;        # Remove specified container from this machine</span><br><span class="line">docker container rm $(docker container ls -a -q)         # Remove all containers</span><br><span class="line">docker image ls -a                             # List all images on this machine</span><br><span class="line">docker image rm &lt;image id&gt;            # Remove specified image from this machine</span><br><span class="line">docker image rm $(docker image ls -a -q)   # Remove all images from this machine</span><br><span class="line">docker login             # Log in this CLI session using your Docker credentials</span><br><span class="line">docker tag &lt;image&gt; username/repository:tag  # Tag &lt;image&gt; for upload to registry</span><br><span class="line">docker push username/repository:tag            # Upload tagged image to registry</span><br><span class="line">docker run username/repository:tag                   # Run image from a registry</span><br></pre></td></tr></table></figure>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://docs.docker.com/get-started/part2/#recap-and-cheat-sheet-optional">https://docs.docker.com/get-started/part2/#recap-and-cheat-sheet-optional</a></p>
-</blockquote>
-
+            在过去，如果您要开始编写Python应用程序，那么您的第一个任务是在您的计算机上安装Python运行时。但是，这会导致您的计算机上的环境需要非常适合您的应用程序按预期运行，并且还需要与您的生产环境相匹配。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%BA%8C%E7%AF%87%EF%BC%88Container%EF%BC%89/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -395,35 +306,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Docker-基础知识"><a href="#Docker-基础知识" class="headerlink" title="Docker 基础知识"></a>Docker 基础知识</h1><h2 id="Docker-concepts"><a href="#Docker-concepts" class="headerlink" title="Docker concepts"></a>Docker concepts</h2><p>Docker是开发人员和系统管理员使用容器开发，部署和运行应用程序的平台。使用Linux容器部署应用程序称为容器化。</p>
-<p>容器化越来越受欢迎的原因主要有一下几点：</p>
-<ul>
-<li>灵活（Flexible）：即使是最复杂的应用也可以集装箱化。</li>
-<li>轻量级（Lightweight）：容器利用并共享主机内核。</li>
-<li>可互换（Interchangeable）：您可以即时部署更新和升级。</li>
-<li>便携式（Portable）：您可以在本地构建，部署到云，并在任何地方运行。</li>
-<li>可扩展（Scalable）：您可以增加并自动分发容器副本。</li>
-<li>可堆叠（Stackable）：您可以垂直和即时堆叠服务。</li>
-</ul>
-<h2 id="Images-and-containers"><a href="#Images-and-containers" class="headerlink" title="Images and containers"></a>Images and containers</h2><p>通过运行映像启动容器。映像是一个可执行包，包含运行应用程序所需的所有内容（代码，运行时，库，环境变量和配置文件）。</p>
-<p><strong>容器</strong> 是运行时 <strong>镜像</strong>的实例，包括镜像在执行时保存在内存中的信息（状态镜像，或者用户进程）。您可以使用命令<strong>docker ps</strong>查看正在运行的容器列表，就像在Linux中一样。</p>
-<div align=center style="width:100%">
-<div style="float:left; width:45%;margin-right:10%">
-![Container](/images/Container@2x.png)
-</div><div style="float:left; width:45%">
-![VM](/images/VM@2x.png)
-</div>
-</div>
-
-<h2 id="Containers-and-virtual-machines"><a href="#Containers-and-virtual-machines" class="headerlink" title="Containers and virtual machines"></a>Containers and virtual machines</h2><p><strong>容器</strong>在Linux上本机运行，并与其他容器共享主机的内核。它运行一个独立的进程，不占用任何其他可执行文件的内存，使其轻量级。相比之下，<strong>虚拟机（VM）</strong>运行一个完整的“客户”操作系统，通过虚拟机管理程序对主机资源进行虚拟访问。通常，VM提供的环境比大多数应用程序需要的资源更多。</p>
-<h2 id="Recap-and-cheat-sheet"><a href="#Recap-and-cheat-sheet" class="headerlink" title="Recap and cheat sheet"></a>Recap and cheat sheet</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># List Docker CLI commands</span></span></span><br><span class="line">docker</span><br><span class="line">docker container --help</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Display Docker version and info</span></span></span><br><span class="line">docker --version</span><br><span class="line">docker version</span><br><span class="line">docker info</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Execute Docker image</span></span></span><br><span class="line">docker run hello-world</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># List Docker images</span></span></span><br><span class="line">docker image ls</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># List Docker containers (running, all, all in quiet mode)</span></span></span><br><span class="line">docker container ls</span><br><span class="line">docker container ls --all</span><br><span class="line">docker container ls -aq</span><br></pre></td></tr></table></figure>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://docs.docker.com/get-started/#conclusion-of-part-one">https://docs.docker.com/get-started/#conclusion-of-part-one</a></p>
-</blockquote>
-
+            Docker是开发人员和系统管理员使用容器开发，部署和运行应用程序的平台。使用Linux容器部署应用程序称为容器化。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/28/Docker%E5%85%A5%E9%97%A8/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -546,7 +439,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -565,7 +458,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -584,7 +477,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -603,7 +496,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -622,7 +515,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -773,7 +666,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -792,7 +685,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -811,7 +704,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -830,7 +723,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -849,7 +742,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -991,7 +884,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

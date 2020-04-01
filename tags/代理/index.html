@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -128,7 +128,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 minutes read (About 806 words)
+                    5 minutes read (About 802 words)
                 </span>
                 
                 
@@ -141,52 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="科学代理"><a href="#科学代理" class="headerlink" title="科学代理"></a>科学代理</h1><h2 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h2><p>这里以 <em>centos 7</em> 操作系统为例，介绍如何搭建代理服务。</p>
-<h3 id="安装pip"><a href="#安装pip" class="headerlink" title="安装pip"></a>安装pip</h3><p>通过python的包管理器pip安装python版本的shadowsocks：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"</span><br><span class="line">python get-pip.py</span><br></pre></td></tr></table></figure>
-
-<h3 id="安装配置shadowsocks"><a href="#安装配置shadowsocks" class="headerlink" title="安装配置shadowsocks"></a>安装配置shadowsocks</h3><p>在控制台执行以下命令安装 shadowsocks：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install --upgrade pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后，创建配置文件shadowsocks.json，内容如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"server"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">  <span class="attr">"server_port"</span>: <span class="number">8388</span>,</span><br><span class="line">  <span class="attr">"password"</span>: <span class="string">"uzon57jd0v869t7w"</span>,</span><br><span class="line">  <span class="attr">"method"</span>: <span class="string">"aes-256-cfb"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>说明：</p>
-<ul>
-<li>method为加密方法，可选aes-128-cfb, aes-192-cfb, aes-256-cfb, bf-cfb, cast5-cfb, des-cfb, rc4-md5, chacha20, salsa20, rc4, table</li>
-<li>server_port为服务监听端口</li>
-<li>password为密码，可使用密码生成工具生成一个随机密码</li>
-</ul>
-<p>以上三项信息在配置 shadowsocks 客户端时需要配置一致，具体说明可查看 shadowsocks 的帮助文档。</p>
-<h3 id="配置自启动"><a href="#配置自启动" class="headerlink" title="配置自启动"></a>配置自启动</h3><p>新建启动脚本文件/etc/systemd/system/shadowsocks.service，内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description&#x3D;Shadowsocks</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">TimeoutStartSec&#x3D;0</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;ssserver -c &#x2F;etc&#x2F;shadowsocks.json</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;multi-user.target</span><br></pre></td></tr></table></figure>
-
-<p>执行以下命令启动 shadowsocks 服务：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable shadowsocks</span><br><span class="line">systemctl start shadowsocks</span><br></pre></td></tr></table></figure>
-
-<p>为了检查 shadowsocks 服务是否已成功启动，可以执行以下命令查看服务的状态：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status shadowsocks -l</span><br></pre></td></tr></table></figure>
-
-<p>如果服务启动成功，则控制台显示的信息可能类似这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">● shadowsocks.service - Shadowsocks</span><br><span class="line">   Loaded: loaded (&#x2F;etc&#x2F;systemd&#x2F;system&#x2F;shadowsocks.service; enabled; vendor preset: disabled)</span><br><span class="line">   Active: active (running) since Mon 2015-12-21 23:51:48 CST; 11min ago</span><br><span class="line"> Main PID: 19334 (ssserver)</span><br><span class="line">   CGroup: &#x2F;system.slice&#x2F;shadowsocks.service</span><br><span class="line">           └─19334 &#x2F;usr&#x2F;bin&#x2F;python &#x2F;usr&#x2F;bin&#x2F;ssserver -c &#x2F;etc&#x2F;shadowsocks.json</span><br><span class="line"></span><br><span class="line">Dec 21 23:51:48 morning.work systemd[1]: Started Shadowsocks.</span><br><span class="line">Dec 21 23:51:48 morning.work systemd[1]: Starting Shadowsocks...</span><br><span class="line">Dec 21 23:51:48 morning.work ssserver[19334]: INFO: loading config from &#x2F;etc&#x2F;shadowsocks.json</span><br><span class="line">Dec 21 23:51:48 morning.work ssserver[19334]: 2015-12-21 23:51:48 INFO     loading libcrypto from libcrypto.so.10</span><br><span class="line">Dec 21 23:51:48 morning.work ssserver[19334]: 2015-12-21 23:51:48 INFO     starting server at 0.0.0.0:8388</span><br></pre></td></tr></table></figure>
-
-<h2 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h2><h3 id="安装图形界面"><a href="#安装图形界面" class="headerlink" title="安装图形界面"></a>安装图形界面</h3><p>ubuntu 16.04版本可以直接通过软件源安装：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:hzwhuang/ss-qt5</span><br><span class="line">sudo apt update </span><br><span class="line">sudo apt install shadowsocks-qt5</span><br></pre></td></tr></table></figure>
-
-<p>其它Linux版本可以直接从 <a href="https://github.com/shadowsocks/shadowsocks-qt5/releases">https://github.com/shadowsocks/shadowsocks-qt5/releases</a> 下载最新版本的AppImage文件。在下载目录下执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> form file dir</span></span><br><span class="line">./Shadowsocks-Qt5-3.0.1-x86_64.AppImage</span><br></pre></td></tr></table></figure>
-
-<p>文件名称替换为自己下载下来的文件名，如果没有执行权限，<strong>chmod a+x</strong> 修改权限。<br>在图形界面配置好IP地址，密码，加密方式。需要和和服务器保持一致。</p>
-<h3 id="配置PAC模式"><a href="#配置PAC模式" class="headerlink" title="配置PAC模式"></a>配置PAC模式</h3><p>使用<strong>genpac</strong>生成PAC文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install genpac</span><br><span class="line"></span><br><span class="line">genpac --proxy="SOCKS5 127.0.0.1:1080" --gfwlist-proxy="SOCKS5 127.0.0.1:1080" -o autoproxy.pac --gfwlist-url="https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt"</span><br></pre></td></tr></table></figure>
-
-<p>其中，gfwlist-url参数的地址在github仓库中 <a href="https://github.com/gfwlist/gfwlist.git">https://github.com/gfwlist/gfwlist.git</a> 有详细介绍<br>生成的pac文件保存在上面命令行 -o 参数指定的地方，如果没有指定路径，则默认保存在命令执行的当前路径下面。</p>
-<p>然后在网络设置中添加PAC文件到动态代理模式：<br>系统设置 &gt;&gt; 网络 &gt;&gt; 网络代理 &gt;&gt; 方法 &gt;&gt; 自动</p>
-<p>在配置URL处填写file:// 后面跟你的pac文件路径，如图，然后点击应用到整个系统</p>
-<h3 id="chrome浏览器插件SwitchyOmega"><a href="#chrome浏览器插件SwitchyOmega" class="headerlink" title="chrome浏览器插件SwitchyOmega"></a>chrome浏览器插件SwitchyOmega</h3><p>可以通过SwitchyOmega插件自定义代理解析，可以解决Linux下自定义gfw的问题。</p>
-<h3 id="脚本"><a href="#脚本" class="headerlink" title="脚本"></a>脚本</h3>
+            这里以 centos 7 操作系统为例，介绍如何搭建代理服务。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/03/23/%E7%A7%91%E5%AD%A6%E4%BB%A3%E7%90%86/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -309,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -328,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -347,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -366,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -385,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -536,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -555,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -574,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -593,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -612,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -754,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

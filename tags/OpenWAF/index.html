@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -141,277 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="OpenWAF系统过滤规则"><a href="#OpenWAF系统过滤规则" class="headerlink" title="OpenWAF系统过滤规则"></a>OpenWAF系统过滤规则</h1><table>
-<thead>
-<tr>
-<th align="left">ID</th>
-<th align="left">Name</th>
-<th align="left">Phase</th>
-<th align="left">Severity</th>
-<th align="left">Description</th>
-<th align="left">Action</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">300002</td>
-<td align="left">malicious.trojan.general</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">检测访问木马页面，检查请求头名称中含有关键字的HTTP请求。请求头key值是否以字符串”x_key”或者”x_file”结束，忽略大小写。</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">300003</td>
-<td align="left">malicious.trojan.general.a</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">检测木马访问，检查请求文件名中是否含有关键字。relative request URL（相对请求路径）中包含关键字”rooot%.exe”，忽略大小写。</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">300004</td>
-<td align="left">malicious.webshell</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测向常见静态资源文件发出的HTTP POST请求。正则匹配请求url中是否以常见静态资源文件的扩展名作为结束（gif, jpe?g, png, bmp, js, css, txt, exe, docx?, xlsx?, pptx?, zip, rar, 7z）忽略大小写。</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">300005</td>
-<td align="left">malicious.webshell.a</td>
-<td align="left">header_filter</td>
-<td align="left">critical</td>
-<td align="left">检测向常用图片格式文件请求但返回text类型的请求(gif, jpe?g, png, bmp) 忽略大小写</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">300006</td>
-<td align="left">malicious.webshell.b</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测对设备文件名的请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700001</td>
-<td align="left">auto.crawler.general</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站爬取工具，检查User-Agent请求头的值是否含有关键字，忽略大小写</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700002</td>
-<td align="left">auto.crawler.general.a</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站爬取工具，检查User-Agent请求头的值是否含有关键字</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700003</td>
-<td align="left">auto.crawler.general.b</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站爬取工具，检查User-Agent请求头的值是否含有关键字</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700004</td>
-<td align="left">auto.scanner.appscan</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求头的值是否含有关键字</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700006</td>
-<td align="left">auto.scanner.general.a</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查User-Agent的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700007</td>
-<td align="left">auto.scanner.general.b</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查User-Agent的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700008</td>
-<td align="left">auto.scanner.nessus</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查User-Agent的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700009</td>
-<td align="left">auto.scanner.wvs</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">检测网站扫描工具，检查请求头的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700010</td>
-<td align="left">auto.scanner.general.c</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查User-Agent的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700011</td>
-<td align="left">auto.crawler.general.c</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查User-Agent的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700012</td>
-<td align="left">auto.scanner.wvs.a</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求头的值含有关键字的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700014</td>
-<td align="left">auto.scanner.appscan.a</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求头的值是否含有关键字</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700015</td>
-<td align="left">auto.scanner.appscan.b</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求头的值是否含有关键字</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700017</td>
-<td align="left">auto.scanner.general.e</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求头及请求头的值</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">700018</td>
-<td align="left">auto.scanner.general.f</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测网站扫描工具，检查请求URI</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100022</td>
-<td align="left">attack.commentSpam</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测垃圾信息，检查User-Agent请求头的值为常见垃圾广告发送者的HTTP请求</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100023</td>
-<td align="left">attack.commentSpam.a</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测垃圾信息，检查参数中以http:开头的HTTP请求</td>
-<td align="left">pass</td>
-</tr>
-<tr>
-<td align="left">100024</td>
-<td align="left">attack.commentSpam.b</td>
-<td align="left">access</td>
-<td align="left">medium</td>
-<td align="left">检测垃圾信息，检查参数中含有4个及以上http:/的HTTP请求</td>
-<td align="left">pass</td>
-</tr>
-<tr>
-<td align="left">100025</td>
-<td align="left">attack.dirTraversal</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">检测路径遍历攻击，检查请求URI、请求头、请求体</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100026</td>
-<td align="left">attack.dirTraversal.a</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">检测路径遍历攻击，检查请求文件名、参数</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100087</td>
-<td align="left">attack.injection.cf</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测针对ColdFusion服务器的注入攻击，检查Cookie、参数</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100088</td>
-<td align="left">attack.injection.cf.a</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测针对ColdFusion服务器的注入攻击，检查请求URI、请求头、请求体</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100205</td>
-<td align="left">attack.injection.ldap</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测LDAP注入攻击，检查Cookie、参数</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100206</td>
-<td align="left">attack.injection.ldap.a</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测LDAP注入攻击，检查请求URI、请求头、请求体</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">100207</td>
-<td align="left">attack.injection.osCmd</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">检测命令注入攻击，检查Cookie、参数</td>
-<td align="left">pass</td>
-</tr>
-<tr>
-<td align="left">200001</td>
-<td align="left">attack.injection.sql.libinjection</td>
-<td align="left">access</td>
-<td align="left">critical</td>
-<td align="left">sqli防护</td>
-<td align="left">deny</td>
-</tr>
-<tr>
-<td align="left">200002</td>
-<td align="left">attack.xss.libinjection</td>
-<td align="left">access</td>
-<td align="left">high</td>
-<td align="left">xss防护</td>
-<td align="left">deny</td>
-</tr>
-</tbody></table>
-
+            OpenWAF 系统过滤规则
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/06/29/OpenWAF%E2%80%94%E2%80%94%E7%B3%BB%E7%BB%9F%E8%BF%87%E6%BB%A4%E8%A7%84%E5%88%99/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -534,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -553,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -572,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -591,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -610,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -761,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -780,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -799,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -818,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -837,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -979,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

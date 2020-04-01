@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="ElasticSearch——scoring-theory" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——scoring-theory" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -130,15 +134,15 @@
             
         </h1>
         <div class="content">
-            <h1 id="ElasticSearch-scoring-theory"><a href="#ElasticSearch-scoring-theory" class="headerlink" title="ElasticSearch scoring theory"></a>ElasticSearch scoring theory</h1><p>Lucene（或 Elasticsearch）使用 <em>布尔模型</em>（Boolean model） 查找匹配文档， 并用一个名为 <em>实用评分函数</em>（practical scoring function） 的公式来计算相关度。这个公式借鉴了 <em>词频/逆向文档频率</em>（term frequency/inverse document frequency） 和 <em>向量空间模型</em>（vector space model），同时也加入了一些现代的新特性，如协调因子（coordination factor），字段长度归一化（field length normalization），以及词或查询语句权重提升。</p>
-<h2 id="布尔模型"><a href="#布尔模型" class="headerlink" title="布尔模型"></a>布尔模型</h2><p>布尔模型（Boolean Model） 只是在查询中使用 AND 、 OR 和 NOT （与、或和非）这样的条件来查找匹配的文档，以下查询：</p>
+            <h2 id="ElasticSearch-scoring-theory"><a href="#ElasticSearch-scoring-theory" class="headerlink" title="ElasticSearch scoring theory"></a>ElasticSearch scoring theory</h2><p>Lucene（或 Elasticsearch）使用 <em>布尔模型</em>（Boolean model） 查找匹配文档， 并用一个名为 <em>实用评分函数</em>（practical scoring function） 的公式来计算相关度。这个公式借鉴了 <em>词频/逆向文档频率</em>（term frequency/inverse document frequency） 和 <em>向量空间模型</em>（vector space model），同时也加入了一些现代的新特性，如协调因子（coordination factor），字段长度归一化（field length normalization），以及词或查询语句权重提升。</p>
+<h3 id="布尔模型"><a href="#布尔模型" class="headerlink" title="布尔模型"></a>布尔模型</h3><p>布尔模型（Boolean Model） 只是在查询中使用 AND 、 OR 和 NOT （与、或和非）这样的条件来查找匹配的文档，以下查询：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">full AND text AND search AND (elasticsearch OR lucene)</span><br></pre></td></tr></table></figure>
 
 <p>会将所有包括词 full 、 text 和 search ，以及 elasticsearch 或 lucene 的文档作为结果集。</p>
 <p>这个过程简单且快速，它将所有可能不匹配的文档排除在外。</p>
-<h2 id="词频-逆向文档频率-TF-IDF"><a href="#词频-逆向文档频率-TF-IDF" class="headerlink" title="词频/逆向文档频率(TF/IDF)"></a>词频/逆向文档频率(TF/IDF)</h2><p>当匹配到一组文档后，需要根据相关度排序这些文档，不是所有的文档都包含所有词，有些词比其他的词更重要。一个文档的相关度评分部分取决于每个查询词在文档中的 权重 。</p>
+<h3 id="词频-逆向文档频率-TF-IDF"><a href="#词频-逆向文档频率-TF-IDF" class="headerlink" title="词频/逆向文档频率(TF/IDF)"></a>词频/逆向文档频率(TF/IDF)</h3><p>当匹配到一组文档后，需要根据相关度排序这些文档，不是所有的文档都包含所有词，有些词比其他的词更重要。一个文档的相关度评分部分取决于每个查询词在文档中的 权重 。</p>
 <p>词的权重由三个因素决定.</p>
-<h3 id="词频"><a href="#词频" class="headerlink" title="词频"></a>词频</h3><p>词在文档中出现的频度是多少？ 频度越高，权重 越高 。 5 次提到同一词的字段比只提到 1 次的更相关。词频的计算方式如下：</p>
+<h4 id="词频"><a href="#词频" class="headerlink" title="词频"></a>词频</h4><p>词在文档中出现的频度是多少？ 频度越高，权重 越高 。 5 次提到同一词的字段比只提到 1 次的更相关。词频的计算方式如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf(t in d) &#x3D; √frequency</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -150,13 +154,13 @@
 <blockquote>
 <p>将参数 index_options 设置为 docs 可以禁用词频统计及词频位置，这个映射的字段不会计算词的出现次数，对于短语或近似查询也不可用。要求精确查询的 not_analyzed 字符串字段会默认使用该设置。</p>
 </blockquote>
-<h3 id="逆向文档频率"><a href="#逆向文档频率" class="headerlink" title="逆向文档频率"></a>逆向文档频率</h3><p>词在集合所有文档里出现的频率是多少？频次越高，权重 越低 。 常用词如 and 或 the 对相关度贡献很少，因为它们在多数文档中都会出现，一些不常见词如 elastic 或 hippopotamus 可以帮助我们快速缩小范围找到感兴趣的文档。逆向文档频率的计算公式如下：</p>
+<h4 id="逆向文档频率"><a href="#逆向文档频率" class="headerlink" title="逆向文档频率"></a>逆向文档频率</h4><p>词在集合所有文档里出现的频率是多少？频次越高，权重 越低 。 常用词如 and 或 the 对相关度贡献很少，因为它们在多数文档中都会出现，一些不常见词如 elastic 或 hippopotamus 可以帮助我们快速缩小范围找到感兴趣的文档。逆向文档频率的计算公式如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">idf(t) &#x3D; 1 + log ( numDocs &#x2F; (docFreq + 1))</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>词 t 的逆向文档频率（ idf ）是：索引中文档数量除以所有包含该词的文档数，然后求其对数。</p>
 </blockquote>
-<h3 id="字段长度归一值"><a href="#字段长度归一值" class="headerlink" title="字段长度归一值"></a>字段长度归一值</h3><p>字段的长度是多少？ 字段越短，字段的权重 越高 。如果词出现在类似标题 title 这样的字段，要比它出现在内容 body 这样的字段中的相关度更高。字段长度的归一值公式如下：</p>
+<h4 id="字段长度归一值"><a href="#字段长度归一值" class="headerlink" title="字段长度归一值"></a>字段长度归一值</h4><p>字段的长度是多少？ 字段越短，字段的权重 越高 。如果词出现在类似标题 title 这样的字段，要比它出现在内容 body 这样的字段中的相关度更高。字段长度的归一值公式如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm(d) &#x3D; 1 &#x2F; √numTerms</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -169,7 +173,7 @@
 <p>这个字段不会将字段长度归一值考虑在内，长字段和短字段会以相同长度计算评分。</p>
 </blockquote>
 <p>对于有些应用场景如日志，归一值不是很有用，要关心的只是字段是否包含特殊的错误码或者特定的浏览器唯一标识符。字段的长度对结果没有影响，禁用归一值可以节省大量内存空间。</p>
-<h3 id="结合使用"><a href="#结合使用" class="headerlink" title="结合使用"></a>结合使用</h3><p>以下三个因素——词频（term frequency）、逆向文档频率（inverse document frequency）和字段长度归一值（field-length norm）——是在索引时计算并存储的。 最后将它们结合在一起计算单个词在特定文档中的 <em>权重</em> 。</p>
+<h4 id="结合使用"><a href="#结合使用" class="headerlink" title="结合使用"></a>结合使用</h4><p>以下三个因素——词频（term frequency）、逆向文档频率（inverse document frequency）和字段长度归一值（field-length norm）——是在索引时计算并存储的。 最后将它们结合在一起计算单个词在特定文档中的 <em>权重</em> 。</p>
 <blockquote>
 <p>前面公式中提到的 文档 实际上是指文档里的某个字段，每个字段都有它自己的倒排索引，因此字段的 TF/IDF 值就是文档的 TF/IDF 值。</p>
 </blockquote>
@@ -180,7 +184,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">weight(text:fox in 0) [PerFieldSimilarity]:  0.15342641 //词 fox 在文档的内部 Lucene doc ID 为 0 ，字段是 text 里的最终评分。</span><br><span class="line">result of:</span><br><span class="line">    fieldWeight in 0                         0.15342641</span><br><span class="line">    product of:</span><br><span class="line">        tf(freq=1.0), with freq of 1:        1.0  //词 fox 在该文档 text 字段中只出现了一次。</span><br><span class="line">        idf(docFreq=1, maxDocs=1):           0.30685282  //fox 在所有文档 text 字段索引的逆向文档频率。</span><br><span class="line">        fieldNorm(doc=0):                    0.5  //	</span><br><span class="line">该字段的字段长度归一值。</span><br></pre></td></tr></table></figure>
 
 <p>当然，查询通常不止一个词，所以需要一种合并多词权重的方式——向量空间模型（vector space model）。</p>
-<h2 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h2><p><em>向量空间模型（vector space model）</em> 提供一种比较多词查询的方式，单个评分代表文档与查询的匹配程度，为了做到这点，这个模型将文档和查询都以 <em>向量（vectors）</em> 的形式表示：</p>
+<h3 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h3><p><em>向量空间模型（vector space model）</em> 提供一种比较多词查询的方式，单个评分代表文档与查询的匹配程度，为了做到这点，这个模型将文档和查询都以 <em>向量（vectors）</em> 的形式表示：</p>
 <p>向量实际上就是包含多个数的一维数组，例如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1,2,5,22,3,8]</span><br></pre></td></tr></table></figure>
 
@@ -207,7 +211,7 @@
 <blockquote>
 <p>在实际中，只有二维向量（两个词的查询）可以在平面上表示，幸运的是， 线性代数 ——作为数学中处理向量的一个分支——为我们提供了计算两个多维向量间角度工具，这意味着可以使用如上同样的方式来解释多个词的查询。关于比较两个向量的更多信息可以参考 余弦近似度（cosine similarity）。</p>
 </blockquote>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model">https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model</a></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model">https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model</a></p>
 
         </div>
         
@@ -338,6 +342,54 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#ElasticSearch-scoring-theory">
+        <span class="has-mr-6">1</span>
+        <span>ElasticSearch scoring theory</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#布尔模型">
+        <span class="has-mr-6">1.1</span>
+        <span>布尔模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#词频-逆向文档频率-TF-IDF">
+        <span class="has-mr-6">1.2</span>
+        <span>词频/逆向文档频率(TF/IDF)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#词频">
+        <span class="has-mr-6">1.2.1</span>
+        <span>词频</span>
+        </a></li><li>
+        <a class="is-flex" href="#逆向文档频率">
+        <span class="has-mr-6">1.2.2</span>
+        <span>逆向文档频率</span>
+        </a></li><li>
+        <a class="is-flex" href="#字段长度归一值">
+        <span class="has-mr-6">1.2.3</span>
+        <span>字段长度归一值</span>
+        </a></li><li>
+        <a class="is-flex" href="#结合使用">
+        <span class="has-mr-6">1.2.4</span>
+        <span>结合使用</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#向量空间模型">
+        <span class="has-mr-6">1.3</span>
+        <span>向量空间模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#Reference">
+        <span class="has-mr-6">1.4</span>
+        <span>Reference</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -361,7 +413,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -380,7 +432,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -399,7 +451,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -418,7 +470,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -437,7 +489,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -588,7 +640,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -607,7 +659,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -626,7 +678,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -645,7 +697,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -664,7 +716,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -806,7 +858,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="ElasticSearch——scoring-theory" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——scoring-theory" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -141,24 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Gitment插件配置"><a href="#Gitment插件配置" class="headerlink" title="Gitment插件配置"></a>Gitment插件配置</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>由于笔者在定义文章名字时文章名太长，所以会导致评论初始化不成功。根据网上大佬的解答，是因为gitment产生的评论是通过github repo issue进行记录的。但是issue的label字符长度不能超过50。<br>而next主题默认label获取方式为：<strong>window.location.pathname</strong>，很容易超过长度限制。</p>
-<h2 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h2><p>还是根据网上大佬们提供的方案，可以对 <strong>window.location.pathname</strong> 的值进行MD5编码，这样得到的结果可以保证长度不超过限制。具体方法如下，这里我使用的Next主题版本为 <strong>6.3.0</strong></p>
-<ul>
-<li><p>找到Next引入gitment的代码所在文件，在 <strong>6.3.0</strong>版本中该文件路径为：<strong>/next/layout/_third-party/comments/gitment.swig</strong></p>
-</li>
-<li><p>在文件中引入第三方MD5编码工具包：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.gitment.enable and theme.gitment.client_id %&#125;</span><br><span class="line">    &lt;script</span><br><span class="line">    src&#x3D;&quot;https:&#x2F;&#x2F;cdn.bootcss.com&#x2F;blueimp-md5&#x2F;1.1.0&#x2F;js&#x2F;md5.js&quot;&gt;&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure></li>
-<li><p>对 <strong>window.location.pathname</strong>进行MD5编码，具体方法为找到上面文件中设置id字段值的地方，然后替换为 <strong>md5(window.location.pathname)</strong>修改后的文件内容如下：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.gitment.enable and theme.gitment.client_id %&#125;</span><br><span class="line">    &lt;script</span><br><span class="line">    src&#x3D;&quot;https:&#x2F;&#x2F;cdn.bootcss.com&#x2F;blueimp-md5&#x2F;1.1.0&#x2F;js&#x2F;md5.js&quot;&gt;&lt;&#x2F;script&gt; </span><br><span class="line">&lt;!-- LOCAL: You can save these files to your site and update links --&gt;</span><br><span class="line">    &#123;% if theme.gitment.mint %&#125;</span><br><span class="line">        &#123;% set CommentsClass &#x3D; &quot;Gitmint&quot; %&#125;</span><br><span class="line">        &lt;link rel&#x3D;&quot;stylesheet&quot; href&#x3D;&quot;https:&#x2F;&#x2F;aimingoo.github.io&#x2F;gitmint&#x2F;style&#x2F;default.css&quot;&gt;</span><br><span class="line">        &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;aimingoo.github.io&#x2F;gitmint&#x2F;dist&#x2F;gitmint.browser.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">        &#123;% set CommentsClass &#x3D; &quot;Gitment&quot; %&#125;</span><br><span class="line">        &lt;link rel&#x3D;&quot;stylesheet&quot; href&#x3D;&quot;https:&#x2F;&#x2F;imsun.github.io&#x2F;gitment&#x2F;style&#x2F;default.css&quot;&gt;</span><br><span class="line">        &lt;script src&#x3D;&quot;https:&#x2F;&#x2F;imsun.github.io&#x2F;gitment&#x2F;dist&#x2F;gitment.browser.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">&lt;!-- END LOCAL --&gt;</span><br><span class="line"></span><br><span class="line">    &#123;% if theme.gitment.cleanly %&#125;</span><br><span class="line">    &lt;style&gt;</span><br><span class="line">        a.gitment-editor-footer-tip &#123; display: none; &#125;</span><br><span class="line">        .gitment-container.gitment-footer-container &#123; display: none; &#125;</span><br><span class="line">    &lt;&#x2F;style&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">    &#123;% if page.comments %&#125;</span><br><span class="line">    &lt;script type&#x3D;&quot;text&#x2F;javascript&quot;&gt;</span><br><span class="line">    function renderGitment()&#123;</span><br><span class="line">        var gitment &#x3D; new &#123;&#123;CommentsClass&#125;&#125;(&#123;</span><br><span class="line">            id: md5(window.location.pathname),</span><br><span class="line">            owner: &#39;&#123;&#123; theme.gitment.github_user &#125;&#125;&#39;,</span><br><span class="line">            repo: &#39;&#123;&#123; theme.gitment.github_repo &#125;&#125;&#39;,</span><br><span class="line">            &#123;% if theme.gitment.mint %&#125;</span><br><span class="line">            lang: &quot;&#123;&#123; theme.gitment.language &#125;&#125;&quot; || navigator.language || navigator.systemLanguage || navigator.userLanguage,</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line">            oauth: &#123;</span><br><span class="line">            &#123;% if theme.gitment.mint and theme.gitment.redirect_protocol %&#125;</span><br><span class="line">                redirect_protocol: &#39;&#123;&#123; theme.gitment.redirect_protocol &#125;&#125;&#39;,</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line">            &#123;% if theme.gitment.mint and theme.gitment.proxy_gateway %&#125;</span><br><span class="line">                proxy_gateway: &#39;&#123;&#123; theme.gitment.proxy_gateway &#125;&#125;&#39;,</span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                client_secret: &#39;&#123;&#123; theme.gitment.client_secret &#125;&#125;&#39;,</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line">                client_id: &#39;&#123;&#123; theme.gitment.client_id &#125;&#125;&#39;</span><br><span class="line">            &#125;&#125;);</span><br><span class="line">        gitment.render(&#39;gitment-container&#39;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#123;% if not theme.gitment.lazy %&#125;</span><br><span class="line">    renderGitment();</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    function showGitment()&#123;</span><br><span class="line">        document.getElementById(&quot;gitment-display-button&quot;).style.display &#x3D; &quot;none&quot;;</span><br><span class="line">        document.getElementById(&quot;gitment-container&quot;).style.display &#x3D; &quot;block&quot;;</span><br><span class="line">        renderGitment();</span><br><span class="line">    &#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">    &lt;&#x2F;script&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://www.v2ex.com/t/381246">https://www.v2ex.com/t/381246</a></p>
-</blockquote>
-
+            由于笔者在定义文章名字时文章名太长，所以会导致评论初始化不成功。根据网上大佬的解答，是因为gitment产生的评论是通过github repo issue进行记录的。但是issue的label字符长度不能超过50。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/20/Hexo-Next-%E9%85%8D%E7%BD%AEgitment%E6%8F%92%E4%BB%B6/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -281,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -300,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -319,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -338,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -357,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -508,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -527,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -546,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -565,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -584,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -726,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

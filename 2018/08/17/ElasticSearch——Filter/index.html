@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="ElasticSearch——Filter" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Filter" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -130,9 +134,9 @@
             
         </h1>
         <div class="content">
-            <h1 id="过滤查询及过滤使用场景分析"><a href="#过滤查询及过滤使用场景分析" class="headerlink" title="过滤查询及过滤使用场景分析"></a>过滤查询及过滤使用场景分析</h1><p>在老版本的ElasticSearch中，过滤查询可以通过Filtered查询语句实现。但是在新版本中，Filtered查询语句已经被bool query取代。具体从哪个版本开始更改，由于没有找到相关资料不能确定。笔者在5.6.3版本中使用时已经发现不支持。</p>
+            <h2 id="过滤查询及过滤使用场景分析"><a href="#过滤查询及过滤使用场景分析" class="headerlink" title="过滤查询及过滤使用场景分析"></a>过滤查询及过滤使用场景分析</h2><p>在老版本的ElasticSearch中，过滤查询可以通过Filtered查询语句实现。但是在新版本中，Filtered查询语句已经被bool query取代。具体从哪个版本开始更改，由于没有找到相关资料不能确定。笔者在5.6.3版本中使用时已经发现不支持。</p>
 <p>使用过滤查询的好处是，检索引擎只判断是否匹配查询条件，而不会对每个document进行打分排序。性能比较起来快于普通的query。</p>
-<h2 id="bool-filter"><a href="#bool-filter" class="headerlink" title="bool.filter"></a>bool.filter</h2><p>在filter元素下指定的查询对评分没有影响 - 分数返回为0.分数仅受已指定查询的影响。例如，以下所有三个查询都返回状态字段包含术语“活动”的所有文档。 第一个查询为所有文档分配0分，因为没有指定评分查询：</p>
+<h3 id="bool-filter"><a href="#bool-filter" class="headerlink" title="bool.filter"></a>bool.filter</h3><p>在filter元素下指定的查询对评分没有影响 - 分数返回为0.分数仅受已指定查询的影响。例如，以下所有三个查询都返回状态字段包含术语“活动”的所有文档。 第一个查询为所有文档分配0分，因为没有指定评分查询：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GET _search</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"term"</span>: &#123;</span><br><span class="line">          <span class="attr">"status"</span>: <span class="string">"active"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在bool查询中添加match_all查询，为所有文档指定1.0分。</p>
@@ -141,11 +145,11 @@
 <p>下面的constant_score查询的行为方式与上面的第二个示例完全相同。 constant_score查询为过滤器匹配的所有文档指定1.0分。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;GET _search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;constant_score&quot;: &#123;</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;term&quot;: &#123;</span><br><span class="line">          &quot;status&quot;: &quot;active&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="过滤查询和过滤聚合使用场景分析"><a href="#过滤查询和过滤聚合使用场景分析" class="headerlink" title="过滤查询和过滤聚合使用场景分析"></a>过滤查询和过滤聚合使用场景分析</h2><p>之前讨论过聚合查询的限定范围，聚合操作是在查询结果上进行实现的。如果没有查询语句，则默认为是在所有文档，类似于match_all。<br>如下，单独使用过滤聚合时，返回的文档依旧是所有文档。但是聚合结果是根据过滤后的文档进行统计的。</p>
+<h3 id="过滤查询和过滤聚合使用场景分析"><a href="#过滤查询和过滤聚合使用场景分析" class="headerlink" title="过滤查询和过滤聚合使用场景分析"></a>过滤查询和过滤聚合使用场景分析</h3><p>之前讨论过聚合查询的限定范围，聚合操作是在查询结果上进行实现的。如果没有查询语句，则默认为是在所有文档，类似于match_all。<br>如下，单独使用过滤聚合时，返回的文档依旧是所有文档。但是聚合结果是根据过滤后的文档进行统计的。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"time"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"detectionTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"lte"</span>: <span class="string">"2018-01-04 14:56:27"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询结果</span></span><br><span class="line">"hits": &#123;</span><br><span class="line">        "total": 32621,</span><br><span class="line">        "max_score": 1,</span><br><span class="line">        "hits": [</span><br><span class="line">            .....</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">"aggregations": &#123;</span><br><span class="line">        "time": &#123;</span><br><span class="line">            "doc_count": 5</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>使用bool.filter查询，然后对过滤结果进行聚合，也可以直接达到过滤聚合的目的，并且返回的查询文档为过滤后的结果。</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><blockquote>
 <p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html</a></p>
 </blockquote>
 
@@ -278,6 +282,34 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#过滤查询及过滤使用场景分析">
+        <span class="has-mr-6">1</span>
+        <span>过滤查询及过滤使用场景分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#bool-filter">
+        <span class="has-mr-6">1.1</span>
+        <span>bool.filter</span>
+        </a></li><li>
+        <a class="is-flex" href="#过滤查询和过滤聚合使用场景分析">
+        <span class="has-mr-6">1.2</span>
+        <span>过滤查询和过滤聚合使用场景分析</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Reference">
+        <span class="has-mr-6">1.2.1</span>
+        <span>Reference</span>
+        </a></li></ul></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -301,7 +333,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -320,7 +352,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -339,7 +371,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -358,7 +390,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -377,7 +409,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -528,7 +560,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -547,7 +579,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -566,7 +598,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -585,7 +617,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -604,7 +636,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -746,7 +778,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="ElasticSearch——Filter" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Filter" height="28">
                 
                 </a>
                 <p class="is-size-7">

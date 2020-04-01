@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -141,24 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Node-js-模块系统"><a href="#Node-js-模块系统" class="headerlink" title="Node.js 模块系统"></a>Node.js 模块系统</h1><p>在Node.js模块系统中，每一个文件都被视为一个分开的模块。例如，考虑一个名为 <strong>foo.js</strong> 的文件:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> circle = <span class="built_in">require</span>(<span class="string">'./circle.js'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`The area of a circle of radius 4 is <span class="subst">$&#123;circle.area(<span class="number">4</span>)&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
-<p>在第一行， <strong>foo.js</strong> 加载 <strong>circle.js</strong> 模块，该模块和 <strong>foo.js</strong> 在同一目录下。 <strong>circle.js</strong> 的内容如下:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; PI &#125; = <span class="built_in">Math</span>;</span><br><span class="line"></span><br><span class="line">exports.area = <span class="function">(<span class="params">r</span>) =&gt;</span> PI * r ** <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">exports.circumference = <span class="function">(<span class="params">r</span>) =&gt;</span> <span class="number">2</span> * PI * r;</span><br></pre></td></tr></table></figure>
-<p>模块 <strong>circle.js</strong> 将函数 <strong>area()</strong> 和 <strong>circumference()</strong> 导出。函数和对象被添加到模块的root，通过将其赋值到 <strong>exports</strong> 这个特殊的对象的额外属性中。</p>
-<p>模块内的本地变量对于其它模块是私有的，因为模块会被自动包含在一个函数中。上面的例子中，变量 <strong>PI</strong> 是 <strong>circle.js</strong> 私有的。</p>
-<p>属性 <strong>module.exports</strong> 可以被重新赋予一个新的值（可以是函数或者对象）。下面的代码中， <strong>bar.js</strong> 使用了导出 <strong>Square</strong> 类的 <strong>square</strong> 模块：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Square = <span class="built_in">require</span>(<span class="string">'./square.js'</span>);</span><br><span class="line"><span class="keyword">const</span> mySquare = <span class="keyword">new</span> Square(<span class="number">2</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`The area of mySquare is <span class="subst">$&#123;mySquare.area()&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
-<p><strong>square</strong> 模块在 <strong>square.js</strong> 中定义：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// assigning to exports will not modify module, must use module.exports</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="class"><span class="keyword">class</span> <span class="title">Square</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(width) &#123;</span><br><span class="line">    <span class="keyword">this</span>.width = width;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  area() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.width ** <span class="number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>模块系统的实现在 <strong>require(‘module’)</strong> 模块中。</p>
-<h2 id="require-resolve-request-options"><a href="#require-resolve-request-options" class="headerlink" title="require.resolve(request[, options])"></a>require.resolve(request[, options])</h2><p>使用 <strong>require()</strong> 相同的内部机制，寻找模块的位置，但是不会加载模块，而是仅仅返回对应的文件名。</p>
-<h2 id="exports-shortcut"><a href="#exports-shortcut" class="headerlink" title="exports shortcut"></a>exports shortcut</h2><p>需要注意的是，不要直接对 <strong>exports</strong> 直接赋值，考虑到浅拷贝，如果对 <strong>exports</strong> 重新赋值，那么它将不会被绑定到 <strong>module.exports</strong>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports.hello = <span class="literal">true</span>; <span class="comment">// Exported from require of module</span></span><br><span class="line">exports = &#123; <span class="attr">hello</span>: <span class="literal">false</span> &#125;;  <span class="comment">// Not exported, only available in the module</span></span><br></pre></td></tr></table></figure>
-<p>当 <strong>module.exports</strong> 属性被一个新对象完全替换时，通常也会重新分配导出：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = exports = <span class="function"><span class="keyword">function</span> <span class="title">Constructor</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ... etc.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+            在Node.js模块系统中，每一个文件都被视为一个分开的模块。例如，考虑一个名为 __foo.js__ 的文件:
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/06/19/Node-js-%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -281,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -300,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -319,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -338,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -357,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -508,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -527,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -546,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -565,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -584,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -726,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

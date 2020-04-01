@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -120,7 +120,7 @@
     
     <div class="card-image">
         <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="image is-7by1">
-            <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+            <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
         </a>
     </div>
     
@@ -134,7 +134,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 minutes read (About 513 words)
+                    3 minutes read (About 516 words)
                 </span>
                 
                 
@@ -173,6 +173,12 @@
     
 <div class="card">
     
+    <div class="card-image">
+        <a href="/2019/08/29/Mybatis-Note/" class="image is-7by1">
+            <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
+        </a>
+    </div>
+    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -183,7 +189,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 minutes read (About 430 words)
+                    3 minutes read (About 427 words)
                 </span>
                 
                 
@@ -232,7 +238,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 minutes read (About 670 words)
+                    4 minutes read (About 662 words)
                 </span>
                 
                 
@@ -245,35 +251,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Maven-Profile与Spring-Profile的整合"><a href="#Maven-Profile与Spring-Profile的整合" class="headerlink" title="Maven Profile与Spring Profile的整合"></a>Maven Profile与Spring Profile的整合</h1><h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>往往一个项目在开发、QA、生产环境的配置是不同的。开始接触maven管理项目时，没有使用过profile。所以自己开发的第一个项目在开发和部署的时候通过手动修改所有配置，比较麻烦。导致我打包部署后，无法再进行开发环境的测试。</p>
-<h2 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h2><h3 id="Spring-Profile配置"><a href="#Spring-Profile配置" class="headerlink" title="Spring Profile配置"></a>Spring Profile配置</h3><p>由于最新配置文件推荐使用yml格式，所以笔者创建的上下文配置文件如下：</p>
-<ul>
-<li>application.yml spring 主配置文件，不管激活那个profile都会被读取并生效，需要在这个配置文件里面设置激活的profile；</li>
-<li>application-dev.yml 开发环境配置文件，命名方式必须为application-{profilename}.yml，不然无法辨别属于哪个profile的配置文件；</li>
-<li>application-prod.yml 生产环境配置文件。</li>
-</ul>
-<p>application.yml 文件中必须配置需要激活的profile名称，配置方式如下：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="maven配置"><a href="#maven配置" class="headerlink" title="maven配置"></a>maven配置</h3><ol>
-<li><p>在pom.xml中添加profiles，配置方式如下：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!--profile id，用于在maven命令行中唯一标识一个profile配置项--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span> <span class="comment">&lt;!--profile激活后，各个参数对应的值，可以在资源文件导入一下配置的properties--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profileActive</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">profileActive</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quartz.URL</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">quartz.URL</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quartz.user</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">quartz.user</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">qurtz.password</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">qurtz.password</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activation</span>&gt;</span> <span class="comment">&lt;!--指定默认激活--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加资源过滤，控制激活不同profile之后，哪些资源文件是必要加载的和没必要加载的：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resource</span>&gt;</span><span class="comment">&lt;!--资源路径--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span> <span class="comment">&lt;!--是否需要额外处理--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">excludes</span>&gt;</span> <span class="comment">&lt;!--排除部分资源文件--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>application-dev.yml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>application-prod.yml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">includes</span>&gt;</span> <span class="comment">&lt;!--加载必要资源文件--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">include</span>&gt;</span>application-$&#123;profileActive&#125;.yml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在pom.xml中指定profile中的properties属性读取方式，需要添加插件 <strong>maven-resources-plugin</strong>，具体配置如下：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-resources-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">delimiters</span>&gt;</span> <span class="comment">&lt;!--指定读取properties的特殊标志符号--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">delimiter</span>&gt;</span>@<span class="tag">&lt;/<span class="name">delimiter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">delimiters</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>通过以上配置，就可在其他作为资源文件的配置文件中读取properties中配置的属性，具体做法为在需要的地方添加 <strong>@property@</strong>。</p>
-</li>
-</ol>
-<h3 id="修改application-yml"><a href="#修改application-yml" class="headerlink" title="修改application.yml"></a>修改application.yml</h3><p>在前面的配置中，我们直接硬编码指定了spring激活的profile。通过maven profile中的properties设置，我们可以直接用maven进行控制激活的profile。只需要修改激活profile的参数值为@profileActive@，修改后的application.yml如下：</p>
-<pre><code><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">@profileActive@</span></span><br></pre></td></tr></table></figure></code></pre><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过maven的profile中properties属性，我们还可以直接控制log4j中的配置，只需要通过引入参数就行了。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://blog.csdn.net/lihe2008125/article/details/50443491">https://blog.csdn.net/lihe2008125/article/details/50443491</a></p>
-</blockquote>
-
+            往往一个项目在开发、QA、生产环境的配置是不同的。开始接触maven管理项目时，没有使用过profile。所以自己开发的第一个项目在开发和部署的时候通过手动修改所有配置，比较麻烦。导致我打包部署后，无法再进行开发环境的测试。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/20/spring-boot-profile%E4%B8%8Emaven-profile%E6%95%B4%E5%90%88/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -299,7 +287,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 minutes read (About 1116 words)
+                    7 minutes read (About 1113 words)
                 </span>
                 
                 
@@ -312,59 +300,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Spring入门"><a href="#Spring入门" class="headerlink" title="Spring入门"></a>Spring入门</h1><p>记录学习《Spring实战》过程中的笔记</p>
-<h2 id="第一个项目"><a href="#第一个项目" class="headerlink" title="第一个项目"></a>第一个项目</h2><p>使用maven管理依赖包，创建一个简单的项目，目录结构如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── pom.xml</span><br><span class="line">├── src</span><br><span class="line">│   ├── main</span><br><span class="line">│   └── test</span><br><span class="line">└── target</span><br><span class="line">    ├── classes</span><br><span class="line">    ├── generated-sources</span><br><span class="line">    ├── generated-test-sources</span><br><span class="line">    └── test-classes</span><br></pre></td></tr></table></figure>
-
-<p>pom.xml中添加以下依赖项：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>添加一个CompactDisc接口，接口包含一个play方法：</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CompactDisc</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>添加一个类，实现CompactDisc接口：</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SgtPeppers</span> <span class="keyword">implements</span> <span class="title">CompactDisc</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String title = <span class="string">"Sgt. Pepper's Lonely Hearts ClubBand"</span>;</span><br><span class="line">    <span class="keyword">private</span> String artist = <span class="string">"The Beatles"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Playing "</span>+title+<span class="string">" by "</span>+artist);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为该类添加了 <strong>@Component</strong> 注解，表明该类会作为组件类，并告知Spring要为这个类创建bean，这样就没有必要显式配置SgtPeppersbean。</p>
-<p>注意的是，组件扫描在默认情况下是不启用的。还是需要显式配置一下Spring，从而命令Spring去寻找带有 <strong>@Component</strong> 注解的类，并为其创建bean。</p>
-<ol start="3">
-<li>创建配置类：</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDPlayerConfig</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>类CDPlayerConfig通过Java代码定义了Spring的装配规则。这里，在类里面没有显式地声明任何bean，而是使用注解 <strong>@ComponentScan</strong> ，这个注解能够在Spring中启用组件扫描。在没有额外配置的情况下， <strong>@ComponentScan</strong>注解会扫描与配置类相同的包。</p>
-<ol start="4">
-<li>创建测试</li>
-</ol>
-<p>这里创建一个JUnit测试，代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= CDPlayerConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SgtPeppersTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CompactDisc cd;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cd.play();</span><br><span class="line">        assertNotNull(cd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注解 <strong>@RunWith</strong>注解让测试开始的时候自动创建Spring应用上下文。注解 <strong>@ContextConfiguration</strong>告诉测试类从哪里加在配置。</p>
-<h2 id="通过Java代码装配bean"><a href="#通过Java代码装配bean" class="headerlink" title="通过Java代码装配bean"></a>通过Java代码装配bean</h2><p>在我们的第一个项目中，spring上下文的配置没有使用xml，并且创建的SpringConfig类没有实际的实现代码配置。而是使用的组件扫描和自动装配。下面尝试在SpringConfig类中利用java代码进行显式配置。</p>
-<h3 id="创建配置类"><a href="#创建配置类" class="headerlink" title="创建配置类"></a>创建配置类</h3><p>使用之前创建的CDPlayerConfig类，移除 <strong>@ComponentScan</strong>注解。</p>
-<h3 id="声明简单的bean"><a href="#声明简单的bean" class="headerlink" title="声明简单的bean"></a>声明简单的bean</h3><p>在CDPlayerConfig类中添加一个方法用于创建所需类型的实例，然后给这个方法添加 <strong>@Bean</strong> 注解。下面的代码声明了CompactDisc bean:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisc <span class="title">sgtPeppers</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SgtPeppers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>@<strong>Bean</strong>注解会告诉Spring这个方法将返回一个对象，该对象要注册为Spring应用上下文中的bean。方法体中包含了最终产生bean实例的逻辑。</p>
-<p>默认情况下，bean的ID与带有@<strong>Bean</strong>注解的方法名是一样的。在本例中，bean的名字将会是sgtPeppers。可以通过指定 <strong>name</strong> 属性给bean设置不同的名字：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span>(name=<span class="string">"customname"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisc <span class="title">sgtPeppers</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SgtPeppers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在方法的逻辑中，不管通过何种方式实现，只要最终能够生成一个CompactDisc实例即可。</p>
-<h3 id="借助JavaConfig实现注入"><a href="#借助JavaConfig实现注入" class="headerlink" title="借助JavaConfig实现注入"></a>借助JavaConfig实现注入</h3><p>在JavaConfig中装配bean的最简单方式就是引用创建bean的方法。例如，下面就是一种声明CDPlayer的可行方案：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MediaPlayer <span class="title">cdPlayer</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(sgtPeppers());<span class="comment">// bean 默认是单例的，这里创建CDPlayerbean时，不会真的调用sgtPeppers。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在cdPlayer()方法中，看起来似乎是通过调用sgtPeppers()方法得到的CompactDisc实例，其实由于sgtPeppers()方法加上了@Bean注解，Spring会拦截所有对该方法的调用，并且保证直接返回该方法所创建的bean，而不是每次都对其进行实际的调用。</p>
-<p>还有一种更简单的装配方式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MediaPlayer <span class="title">cdPlayer</span><span class="params">(CompactDisc cd)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(cd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过上面的方式引用其他的bean通常是最佳的选择，因为不要求将CompactDisc声明到同一个配置类中。在这里甚至没有要求CompactDisc必须要在JavaConfig中声明，实际上它可以通过组件扫描功能自定发现或者通过XML来进行配置。可以将配置分散到多个配置类，XML文件以及自动扫描和装配bean之中，只要功能完整健全即可。</p>
-
+            记录学习《Spring实战》过程中的笔记
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/07/26/Spring%E5%85%A5%E9%97%A8/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -487,7 +433,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -506,7 +452,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -525,7 +471,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -544,7 +490,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -563,7 +509,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -714,7 +660,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -733,7 +679,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -752,7 +698,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -771,7 +717,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -790,7 +736,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -932,7 +878,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

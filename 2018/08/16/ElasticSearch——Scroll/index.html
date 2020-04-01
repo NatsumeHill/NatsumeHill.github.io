@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="ElasticSearch——Scroll" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Scroll" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -130,13 +134,13 @@
             
         </h1>
         <div class="content">
-            <h1 id="ElasticSearch中的分页查询"><a href="#ElasticSearch中的分页查询" class="headerlink" title="ElasticSearch中的分页查询"></a>ElasticSearch中的分页查询</h1><p>在ElasticSreach中可以使用<em>setFrome(size)</em>来实现分页查询，具体查询方法如下：</p>
+            <h2 id="ElasticSearch中的分页查询"><a href="#ElasticSearch中的分页查询" class="headerlink" title="ElasticSearch中的分页查询"></a>ElasticSearch中的分页查询</h2><p>在ElasticSreach中可以使用<em>setFrome(size)</em>来实现分页查询，具体查询方法如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>:<span class="number">100</span>,</span><br><span class="line">    <span class="attr">"frome"</span>:<span class="number">1000</span>,</span><br><span class="line">    <span class="attr">"query"</span> : &#123;</span><br><span class="line">        <span class="attr">"term"</span> : &#123; <span class="attr">"user"</span> : <span class="string">"kimchy"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index)</span><br><span class="line">                .setTypes(type)</span><br><span class="line">                .setQuery(boolQueryBuilder)</span><br><span class="line">                .addSort(sortQueryBuild)</span><br><span class="line">                .setFrom(skipSize)</span><br><span class="line">                .setSize(pageSize);</span><br></pre></td></tr></table></figure>
 
 <p>但是这种分页方式有个限制条件，size+from不能超过10000。除了这种方式，ElasticSearch提供了另外一个方法进行分页查询，scroll。</p>
-<h2 id="Scroll"><a href="#Scroll" class="headerlink" title="Scroll"></a>Scroll</h2><p>search 请求返回一个单一的结果“页”，而 scroll API 可以被用来检索大量的结果（甚至所有的结果），就像在传统数据库中使用的游标 cursor。</p>
+<h3 id="Scroll"><a href="#Scroll" class="headerlink" title="Scroll"></a>Scroll</h3><p>search 请求返回一个单一的结果“页”，而 scroll API 可以被用来检索大量的结果（甚至所有的结果），就像在传统数据库中使用的游标 cursor。</p>
 <p>scroll并不是为了实时的用户响应，而是为了处理大量的数据，例如，为了使用不同的配置来重新索引一个 index 到另一个 index 中去。</p>
 <p>为了使用 scroll，初始搜索请求应该在查询中指定 scroll 参数，这可以告诉 Elasticsearch 需要保持搜索的上下文环境多久。</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /twitter/_search?scroll=1m</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">100</span>,</span><br><span class="line">    <span class="attr">"query"</span>: &#123;</span><br><span class="line">        <span class="attr">"match"</span> : &#123;</span><br><span class="line">            <span class="attr">"title"</span> : <span class="string">"elasticsearch"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -147,14 +151,14 @@
 <p>JavaAPI进行Scroll如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse scrollResponse = client.prepareSearch(INDEX)</span><br><span class="line">    .setSearchType(SearchType.SCAN).setSize(<span class="number">10000</span>).setScroll(TimeValue.timeValueMinutes(<span class="number">1</span>))</span><br><span class="line">    .execute().actionGet();  </span><br><span class="line">count = scrollResponse.getHits().getTotalHits();<span class="comment">//第一次不返回数据</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>,sum=<span class="number">0</span>; sum&lt;count; i++)&#123;</span><br><span class="line">    scrollResponse = client.prepareSearchScroll(scrollResponse.getScrollId())  </span><br><span class="line">        .setScroll(TimeValue.timeValueMinutes(<span class="number">8</span>))  </span><br><span class="line">    .execute().actionGet();</span><br><span class="line">    sum += scrollResponse.getHits().hits().length;</span><br><span class="line">    System.out.println(<span class="string">"总量"</span>+count+<span class="string">" 已经查到"</span>+sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="清除-scroll-API"><a href="#清除-scroll-API" class="headerlink" title="清除 scroll API"></a>清除 scroll API</h2><p>搜索上下文当 scroll 超时就会自动移除。但是保持 scroll 存活需要代价，所以 当scroll不再被使用的时候可以通过 clear-scroll 显式地清除：</p>
+<h3 id="清除-scroll-API"><a href="#清除-scroll-API" class="headerlink" title="清除 scroll API"></a>清除 scroll API</h3><p>搜索上下文当 scroll 超时就会自动移除。但是保持 scroll 存活需要代价，所以 当scroll不再被使用的时候可以通过 clear-scroll 显式地清除：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DELETE /_search/scroll</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"scroll_id"</span> : <span class="string">"DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ=="</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>同样，上面的操作不需要指定index和type。</p>
 <p>可以通过传递<strong>All</strong>参数，删除当前存在的所有Scroll。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE /_search/scroll/_all</span><br></pre></td></tr></table></figure>
 
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><blockquote>
 <p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-request-scroll.html">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-request-scroll.html</a></p>
 </blockquote>
 
@@ -287,6 +291,34 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#ElasticSearch中的分页查询">
+        <span class="has-mr-6">1</span>
+        <span>ElasticSearch中的分页查询</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Scroll">
+        <span class="has-mr-6">1.1</span>
+        <span>Scroll</span>
+        </a></li><li>
+        <a class="is-flex" href="#清除-scroll-API">
+        <span class="has-mr-6">1.2</span>
+        <span>清除 scroll API</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Reference">
+        <span class="has-mr-6">1.2.1</span>
+        <span>Reference</span>
+        </a></li></ul></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -310,7 +342,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -329,7 +361,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -348,7 +380,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -367,7 +399,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -386,7 +418,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -537,7 +569,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -556,7 +588,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -575,7 +607,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -594,7 +626,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -613,7 +645,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -755,7 +787,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="ElasticSearch——Scroll" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Scroll" height="28">
                 
                 </a>
                 <p class="is-size-7">

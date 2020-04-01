@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -128,7 +128,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 minutes read (About 670 words)
+                    4 minutes read (About 662 words)
                 </span>
                 
                 
@@ -141,35 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Maven-Profile与Spring-Profile的整合"><a href="#Maven-Profile与Spring-Profile的整合" class="headerlink" title="Maven Profile与Spring Profile的整合"></a>Maven Profile与Spring Profile的整合</h1><h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>往往一个项目在开发、QA、生产环境的配置是不同的。开始接触maven管理项目时，没有使用过profile。所以自己开发的第一个项目在开发和部署的时候通过手动修改所有配置，比较麻烦。导致我打包部署后，无法再进行开发环境的测试。</p>
-<h2 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h2><h3 id="Spring-Profile配置"><a href="#Spring-Profile配置" class="headerlink" title="Spring Profile配置"></a>Spring Profile配置</h3><p>由于最新配置文件推荐使用yml格式，所以笔者创建的上下文配置文件如下：</p>
-<ul>
-<li>application.yml spring 主配置文件，不管激活那个profile都会被读取并生效，需要在这个配置文件里面设置激活的profile；</li>
-<li>application-dev.yml 开发环境配置文件，命名方式必须为application-{profilename}.yml，不然无法辨别属于哪个profile的配置文件；</li>
-<li>application-prod.yml 生产环境配置文件。</li>
-</ul>
-<p>application.yml 文件中必须配置需要激活的profile名称，配置方式如下：</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="maven配置"><a href="#maven配置" class="headerlink" title="maven配置"></a>maven配置</h3><ol>
-<li><p>在pom.xml中添加profiles，配置方式如下：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!--profile id，用于在maven命令行中唯一标识一个profile配置项--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span> <span class="comment">&lt;!--profile激活后，各个参数对应的值，可以在资源文件导入一下配置的properties--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profileActive</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">profileActive</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quartz.URL</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">quartz.URL</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">quartz.user</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">quartz.user</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">qurtz.password</span>&gt;</span>×××<span class="tag">&lt;/<span class="name">qurtz.password</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activation</span>&gt;</span> <span class="comment">&lt;!--指定默认激活--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
-<li><p>添加资源过滤，控制激活不同profile之后，哪些资源文件是必要加载的和没必要加载的：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resource</span>&gt;</span><span class="comment">&lt;!--资源路径--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span> <span class="comment">&lt;!--是否需要额外处理--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">excludes</span>&gt;</span> <span class="comment">&lt;!--排除部分资源文件--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>application-dev.yml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>application-prod.yml<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">includes</span>&gt;</span> <span class="comment">&lt;!--加载必要资源文件--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">include</span>&gt;</span>application-$&#123;profileActive&#125;.yml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在pom.xml中指定profile中的properties属性读取方式，需要添加插件 <strong>maven-resources-plugin</strong>，具体配置如下：</p>
- <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-resources-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">delimiters</span>&gt;</span> <span class="comment">&lt;!--指定读取properties的特殊标志符号--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">delimiter</span>&gt;</span>@<span class="tag">&lt;/<span class="name">delimiter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">delimiters</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>通过以上配置，就可在其他作为资源文件的配置文件中读取properties中配置的属性，具体做法为在需要的地方添加 <strong>@property@</strong>。</p>
-</li>
-</ol>
-<h3 id="修改application-yml"><a href="#修改application-yml" class="headerlink" title="修改application.yml"></a>修改application.yml</h3><p>在前面的配置中，我们直接硬编码指定了spring激活的profile。通过maven profile中的properties设置，我们可以直接用maven进行控制激活的profile。只需要修改激活profile的参数值为@profileActive@，修改后的application.yml如下：</p>
-<pre><code><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">@profileActive@</span></span><br></pre></td></tr></table></figure></code></pre><h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>通过maven的profile中properties属性，我们还可以直接控制log4j中的配置，只需要通过引入参数就行了。</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://blog.csdn.net/lihe2008125/article/details/50443491">https://blog.csdn.net/lihe2008125/article/details/50443491</a></p>
-</blockquote>
-
+            往往一个项目在开发、QA、生产环境的配置是不同的。开始接触maven管理项目时，没有使用过profile。所以自己开发的第一个项目在开发和部署的时候通过手动修改所有配置，比较麻烦。导致我打包部署后，无法再进行开发环境的测试。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/20/spring-boot-profile%E4%B8%8Emaven-profile%E6%95%B4%E5%90%88/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -292,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -311,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -330,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -349,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -368,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -519,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -538,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -557,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -576,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -595,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -737,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

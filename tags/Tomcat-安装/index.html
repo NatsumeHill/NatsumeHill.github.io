@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
             
             </a>
         </div>
@@ -128,7 +128,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 minutes read (About 941 words)
+                    6 minutes read (About 931 words)
                 </span>
                 
                 
@@ -141,52 +141,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="Ubuntu16-04-or-later版本中Tomcat的安装"><a href="#Ubuntu16-04-or-later版本中Tomcat的安装" class="headerlink" title="Ubuntu16.04 or later版本中Tomcat的安装"></a>Ubuntu16.04 or later版本中Tomcat的安装</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="Step-1：JDK安装和Tomcat安装"><a href="#Step-1：JDK安装和Tomcat安装" class="headerlink" title="Step 1：JDK安装和Tomcat安装"></a>Step 1：JDK安装和Tomcat安装</h3><p>基本要求不用多说，需要下载适合Tomcat版本的JDK。具体JDK的安装方法可自行移步搜索引擎查找方法。然后便是下载合适版本的Tomcat，解压到合适的目录。记住自己JDK安装目录，和Tomcat存放目录。笔者的JDK版本为1.8.0_172, Tomcat版本为9.0。JDK目录为 <strong>~/DevelopTools/jdk1.8.0_172</strong>，Tomcat目录为 <strong>/opt/tomcat9</strong>。</p>
-<h3 id="Step-2-创建Tomcat用户"><a href="#Step-2-创建Tomcat用户" class="headerlink" title="Step 2: 创建Tomcat用户"></a>Step 2: 创建Tomcat用户</h3><p>出于安全考虑，Tomcat应该作为非特权用户运行（即不是root用户）。我们将创建一个将运行Tomcat服务的新用户和组。</p>
-<p>首先创建一个新的 <strong>tomcat</strong> 用户组：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd tomcat</span><br></pre></td></tr></table></figure>
-
-<p>然后创建名为 <strong>tomcat</strong> 的用户，并把该用户添加到刚刚创建的 <strong>tomcat</strong> 用户组当中。设置用户的home目录为tomcat安装目录，这里笔者设置为 <strong>/opt/tomcat9</strong>。最后需要设置shell为 <strong>/bin/false</strong> 防止 <strong>tomcat</strong> 用户获取shell。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> notice：change the dir according to your installation structure</span></span><br><span class="line">sudo useradd -s /bin/false -g tomcat -d /opt/tomcat9 tomcat</span><br></pre></td></tr></table></figure>
-
-<h3 id="Step-3-修改文件夹权限"><a href="#Step-3-修改文件夹权限" class="headerlink" title="Step 3: 修改文件夹权限"></a>Step 3: 修改文件夹权限</h3><p>我们设置的tomcat用户需要能够访问Tomcat安装目录。切换到我们解压缩Tomcat安装的目录，将tomcat安装目录所属用户组设置为 <strong>tomcat</strong> 用户组：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> notice：change the dir according to your installation structure</span></span><br><span class="line">sudo chgrp -R tomcat /opt/tomcat9</span><br></pre></td></tr></table></figure>
-
-<p>修改 <strong>conf</strong> 目录中文件的权限，使得tomcat用户组有可读权限，并且修改 <strong>conf</strong> 权限使得tomcat组有可执行权限：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> notice：change the dir according to your installation structure</span></span><br><span class="line">cd /opt/tomcat9</span><br><span class="line">sudo chmod -R g+r conf</span><br><span class="line">sudo chmod g+x conf</span><br></pre></td></tr></table></figure>
-
-<p>最后还需要修改  <strong>webapps</strong>, <strong>work</strong>, <strong>temp</strong>, 和 <strong>logs</strong> 目录的所有者为tomcat：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> notice：change the dir according to your installation structure</span></span><br><span class="line">cd /opt/tomcat9</span><br><span class="line">sudo chown -R tomcat webapps/ work/ temp/ logs/</span><br></pre></td></tr></table></figure>
-
-<h3 id="Step-4-创建系统服务文件"><a href="#Step-4-创建系统服务文件" class="headerlink" title="Step 4: 创建系统服务文件"></a>Step 4: 创建系统服务文件</h3><p>我们希望能够将Tomcat作为服务运行，因此我们将设置systemd服务文件。在 <strong>/etc/systemd/system</strong>目录下创建名为 <strong>tomcat.service</strong>的文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/tomcat.service</span><br></pre></td></tr></table></figure>
-
-<p>将以下内容粘贴到 <strong>tomcat.service</strong> 文件中。如有必要，修改JAVA_HOME的值以匹配您在系统上找到的值。您可能还想修改CATALINA_OPTS中指定的内存分配设置：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Apache Tomcat Web Application Container</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line"></span><br><span class="line">Environment=JAVA_HOME=/home/fangkui/DevelopTools/jdk1.8.0_172/jre</span><br><span class="line">Environment=CATALINA_PID=/opt/tomcat9/temp/tomcat.pid</span><br><span class="line">Environment=CATALINA_HOME=/opt/tomcat9</span><br><span class="line">Environment=CATALINA_BASE=/opt/tomcat9</span><br><span class="line">Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'</span><br><span class="line">Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'</span><br><span class="line"></span><br><span class="line">ExecStart=/opt/tomcat/bin/startup.sh</span><br><span class="line">ExecStop=/opt/tomcat/bin/shutdown.sh</span><br><span class="line"></span><br><span class="line">User=tomcat</span><br><span class="line">Group=tomcat</span><br><span class="line">UMask=0007</span><br><span class="line">RestartSec=10</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-
-<p>然后保存文件。</p>
-<p>接下来，重新加载systemd守护程序，以便它知道我们的服务文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-
-<p>键入以下命令启动Tomcat服务：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start tomcat</span><br></pre></td></tr></table></figure>
-
-<p>键入以下内容，仔细检查它是否正常启动：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status tomcat</span><br></pre></td></tr></table></figure>
-
-<p>正常执行结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">● tomcat.service - Apache Tomcat Web Application Container</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/tomcat.service; enabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Mon 2018-08-27 13:28:03 CST; 1h 4min ago</span><br><span class="line">  Process: 1485 ExecStart=/opt/tomcat9/bin/startup.sh (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 1629 (java)</span><br><span class="line">    Tasks: 49 (limit: 4915)</span><br><span class="line">   CGroup: /system.slice/tomcat.service</span><br><span class="line">           └─1629 /home/fangkui/DevelopTools/jdk1.8.0_172/jre/bin/java -Djava.util.logging.config.file=/opt/tomcat9/c</span><br><span class="line"></span><br><span class="line">8月 27 13:28:02 fangkui-linux systemd[1]: Starting Apache Tomcat Web Application Container...</span><br><span class="line">8月 27 13:28:03 fangkui-linux systemd[1]: Started Apache Tomcat Web Application Container.</span><br><span class="line">lines 1-11/11 (END)</span><br></pre></td></tr></table></figure>
-
-<p>可以看到服务中的 <strong>active (running)</strong>字样</p>
-<p>如果启动无误，就可以将服务添加到自动启动中了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable tomcat</span><br></pre></td></tr></table></figure>
-
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
-<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04">https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04</a><br><a href="https://devops.profitbricks.com/tutorials/how-to-install-and-configure-tomcat-8-on-ubuntu-1604/">https://devops.profitbricks.com/tutorials/how-to-install-and-configure-tomcat-8-on-ubuntu-1604/</a></p>
-</blockquote>
-
+            Ubuntu16.04 or later版本中Tomcat的安装
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/08/27/Ubuntu-16-04-or-later-%E7%89%88%E6%9C%AC%E6%B7%BB%E5%8A%A0Tomcat%E4%B8%BA%E6%9C%8D%E5%8A%A1/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -309,7 +274,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -328,7 +293,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -347,7 +312,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -366,7 +331,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -385,7 +350,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -536,7 +501,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -555,7 +520,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -574,7 +539,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -593,7 +558,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -612,7 +577,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -754,7 +719,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="NatsumeHill&#39;s blog" height="28">
                 
                 </a>
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="GTSRB德国交通标志" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="GTSRB德国交通标志" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -130,10 +134,10 @@
             
         </h1>
         <div class="content">
-            <h1 id="German-Traffic-Sign-Recognition-Benchmark"><a href="#German-Traffic-Sign-Recognition-Benchmark" class="headerlink" title="German Traffic Sign Recognition Benchmark"></a>German Traffic Sign Recognition Benchmark</h1><p>数据获取地址：<a href="http://benchmark.ini.rub.de/">http://benchmark.ini.rub.de/</a></p>
+            <h2 id="German-Traffic-Sign-Recognition-Benchmark"><a href="#German-Traffic-Sign-Recognition-Benchmark" class="headerlink" title="German Traffic Sign Recognition Benchmark"></a>German Traffic Sign Recognition Benchmark</h2><p>数据获取地址：<a href="http://benchmark.ini.rub.de/">http://benchmark.ini.rub.de/</a></p>
 <p>数据可以免费使用。但是，如果您使用该数据，我们诚挚地要求您引用以下出版物：</p>
 <p>J. Stallkamp, M. Schlipsing, J. Salmen, and C. Igel. The German Traffic Sign Recognition Benchmark: A multi-class classification competition. In Proceedings of the IEEE International Joint Conference on Neural Networks, pages 1453–1460. 2011.</p>
-<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>从网站上可以获取到训练集和测试集，训练集文件名如下：</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><p>从网站上可以获取到训练集和测试集，训练集文件名如下：</p>
 <table>
 <thead>
 <tr>
@@ -187,7 +191,7 @@
 <td align="left">包含类别的注释文件</td>
 </tr>
 </tbody></table>
-<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><ul>
+<h4 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h4><ul>
 <li>每个图像包含一个交通标志</li>
 <li>图像在实际交通标志周围（至少5个像素）包含10％的边界，以允许基于边缘的方法</li>
 <li>图像以PPM格式存储（Portable Pixmap, P6）</li>
@@ -196,7 +200,7 @@
 <li>实际的交通标志不一定以图像为中心。对于在完整摄像机图像中接近图像边界的图像，这是正确的</li>
 <li>交通标志的边界框是annotatinos的一部分（见下文）</li>
 </ul>
-<h3 id="注释（annotatino）"><a href="#注释（annotatino）" class="headerlink" title="注释（annotatino）"></a>注释（annotatino）</h3><p>注释在CSV文件中提供。字段由“;”分隔（分号）。注释包含以下信息：</p>
+<h4 id="注释（annotatino）"><a href="#注释（annotatino）" class="headerlink" title="注释（annotatino）"></a>注释（annotatino）</h4><p>注释在CSV文件中提供。字段由“;”分隔（分号）。注释包含以下信息：</p>
 <ul>
 <li>Filename: Filename of corresponding image</li>
 <li>Width: Width of the image</li>
@@ -214,7 +218,7 @@
 <ul>
 <li>ClassId: Assigned class label</li>
 </ul>
-<h2 id="数据读取代码示例"><a href="#数据读取代码示例" class="headerlink" title="数据读取代码示例"></a>数据读取代码示例</h2><p>Python示例代码提供了一个函数来遍历训练集以读取图像和相应的类ID。 代码依赖于matplotlib。</p>
+<h3 id="数据读取代码示例"><a href="#数据读取代码示例" class="headerlink" title="数据读取代码示例"></a>数据读取代码示例</h3><p>Python示例代码提供了一个函数来遍历训练集以读取图像和相应的类ID。 代码依赖于matplotlib。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The German Traffic Sign Recognition Benchmark</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># sample code for reading the traffic sign images and the</span></span><br><span class="line"><span class="comment"># corresponding labels</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># example:</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># trainImages, trainLabels = readTrafficSigns('GTSRB/Training')</span></span><br><span class="line"><span class="comment"># print len(trainLabels), len(trainImages)</span></span><br><span class="line"><span class="comment"># plt.imshow(trainImages[42])</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># have fun, Christian</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> csv</span><br><span class="line"></span><br><span class="line"><span class="comment"># function for reading the images</span></span><br><span class="line"><span class="comment"># arguments: path to the traffic sign data, for example './GTSRB/Training'</span></span><br><span class="line"><span class="comment"># returns: list of images, list of corresponding labels</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readTrafficSigns</span><span class="params">(rootpath)</span>:</span></span><br><span class="line">    <span class="string">'''Reads traffic sign data for German Traffic Sign Recognition Benchmark.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Arguments: path to the traffic sign data, for example './GTSRB/Training'</span></span><br><span class="line"><span class="string">    Returns:   list of images, list of corresponding labels'''</span></span><br><span class="line">    images = [] <span class="comment"># images</span></span><br><span class="line">    labels = [] <span class="comment"># corresponding labels</span></span><br><span class="line">    <span class="comment"># loop over all 42 classes</span></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">43</span>):</span><br><span class="line">        prefix = rootpath + <span class="string">'/'</span> + format(c, <span class="string">'05d'</span>) + <span class="string">'/'</span> <span class="comment"># subdirectory for class</span></span><br><span class="line">        gtFile = open(prefix + <span class="string">'GT-'</span>+ format(c, <span class="string">'05d'</span>) + <span class="string">'.csv'</span>) <span class="comment"># annotations file</span></span><br><span class="line">        gtReader = csv.reader(gtFile, delimiter=<span class="string">';'</span>) <span class="comment"># csv parser for annotations file</span></span><br><span class="line">        gtReader.next() <span class="comment"># skip header</span></span><br><span class="line">        <span class="comment"># loop over all images in current annotations file</span></span><br><span class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> gtReader:</span><br><span class="line">            images.append(plt.imread(prefix + row[<span class="number">0</span>])) <span class="comment"># the 1th column is the filename</span></span><br><span class="line">            labels.append(row[<span class="number">7</span>]) <span class="comment"># the 8th column is the label</span></span><br><span class="line">        gtFile.close()</span><br><span class="line">    <span class="keyword">return</span> images, labels</span><br></pre></td></tr></table></figure>
         </div>
         
@@ -338,6 +342,38 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#German-Traffic-Sign-Recognition-Benchmark">
+        <span class="has-mr-6">1</span>
+        <span>German Traffic Sign Recognition Benchmark</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#数据结构">
+        <span class="has-mr-6">1.1</span>
+        <span>数据结构</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#图像">
+        <span class="has-mr-6">1.1.1</span>
+        <span>图像</span>
+        </a></li><li>
+        <a class="is-flex" href="#注释（annotatino）">
+        <span class="has-mr-6">1.1.2</span>
+        <span>注释（annotatino）</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#数据读取代码示例">
+        <span class="has-mr-6">1.2</span>
+        <span>数据读取代码示例</span>
+        </a></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -361,7 +397,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -380,7 +416,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -399,7 +435,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -418,7 +454,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -437,7 +473,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -588,7 +624,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -607,7 +643,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -626,7 +662,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -645,7 +681,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -664,7 +700,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -806,7 +842,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="GTSRB德国交通标志" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="GTSRB德国交通标志" height="28">
                 
                 </a>
                 <p class="is-size-7">

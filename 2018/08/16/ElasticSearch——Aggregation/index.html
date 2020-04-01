@@ -16,7 +16,7 @@
 
 
 
-<link rel="icon" href="/images/favicon.svg">
+<link rel="icon" href="/images/WechatIMG32.jpeg">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -66,7 +66,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="ElasticSearch——Aggregation" height="28">
+                <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Aggregation" height="28">
             
             </a>
         </div>
@@ -90,6 +90,10 @@
             
             <div class="navbar-end">
                 
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
                 
                 
                 <a class="navbar-item search" title="Search" href="javascript:;">
@@ -130,14 +134,14 @@
             
         </h1>
         <div class="content">
-            <h1 id="ElasticSearch踩坑纪实——Aggregation"><a href="#ElasticSearch踩坑纪实——Aggregation" class="headerlink" title="ElasticSearch踩坑纪实——Aggregation"></a>ElasticSearch踩坑纪实——Aggregation</h1><p>在进行聚合查询的时候，默认会返回size大小的匹配的document。</p>
-<h2 id="聚合范围"><a href="#聚合范围" class="headerlink" title="聚合范围"></a>聚合范围</h2><p>聚合可以与搜索请求同时执行，但是我们需要理解一个新概念： 范围 。 默认情况下，聚合与查询是对同一范围进行操作的，也就是说，聚合是基于我们查询匹配的文档集合进行计算的。</p>
-<h2 id="去重聚合"><a href="#去重聚合" class="headerlink" title="去重聚合"></a>去重聚合</h2><p>使用Cardinality Aggregation可以统计根据某一字段，不重复值的总数。使用方法如下：</p>
+            <h2 id="ElasticSearch踩坑纪实——Aggregation"><a href="#ElasticSearch踩坑纪实——Aggregation" class="headerlink" title="ElasticSearch踩坑纪实——Aggregation"></a>ElasticSearch踩坑纪实——Aggregation</h2><p>在进行聚合查询的时候，默认会返回size大小的匹配的document。</p>
+<h3 id="聚合范围"><a href="#聚合范围" class="headerlink" title="聚合范围"></a>聚合范围</h3><p>聚合可以与搜索请求同时执行，但是我们需要理解一个新概念： 范围 。 默认情况下，聚合与查询是对同一范围进行操作的，也就是说，聚合是基于我们查询匹配的文档集合进行计算的。</p>
+<h3 id="去重聚合"><a href="#去重聚合" class="headerlink" title="去重聚合"></a>去重聚合</h3><p>使用Cardinality Aggregation可以统计根据某一字段，不重复值的总数。使用方法如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RestAPI 版本</span></span><br><span class="line">POST /sales/_search?size=0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"type_count"</span> : &#123;</span><br><span class="line">            <span class="attr">"cardinality"</span> : &#123;</span><br><span class="line">                <span class="attr">"field"</span> : <span class="string">"type"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java 版本</span></span><br><span class="line">AggregationBuilder aggregationBuilder = AggregationBuilders.cardinality(<span class="string">"count"</span>).field(<span class="string">"deviceId"</span>);</span><br><span class="line">SearchResponse response = requestBuilder.addAggregation(aggregationBuilder)</span><br><span class="line">                .setSize(<span class="number">0</span>)</span><br><span class="line">                .execute()</span><br><span class="line">                .actionGet();</span><br><span class="line">Cardinality agg = response.getAggregations().get(<span class="string">"count"</span>);</span><br><span class="line"><span class="keyword">int</span> count = agg.getValue()</span><br></pre></td></tr></table></figure>
 
-<h2 id="过滤聚合"><a href="#过滤聚合" class="headerlink" title="过滤聚合"></a>过滤聚合</h2><p>在聚合中插入子查询，可以对查询过后的结果进行聚合，具体使用方法如下：</p>
+<h3 id="过滤聚合"><a href="#过滤聚合" class="headerlink" title="过滤聚合"></a>过滤聚合</h3><p>在聚合中插入子查询，可以对查询过后的结果进行聚合，具体使用方法如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RestAPI方式</span></span><br><span class="line">POST /sales/_search?size=0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"t_shirts"</span> : &#123;</span><br><span class="line">            <span class="attr">"filter"</span> : &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"type"</span>: <span class="string">"t-shirt"</span> &#125; &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">                <span class="attr">"avg_price"</span> : &#123; <span class="attr">"avg"</span> : &#123; <span class="attr">"field"</span> : <span class="string">"price"</span> &#125; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JAVA 方式</span></span><br><span class="line">SearchRequestBuilder requestBuilder = client.prepareSearch(<span class="string">"program_running_normal"</span>).setTypes(<span class="string">"normal"</span>);</span><br><span class="line">AggregationBuilder filterAggregationBuilder = AggregationBuilders.filter(<span class="string">"count_by_time"</span>,</span><br><span class="line">        QueryBuilders.rangeQuery(<span class="string">"endTime"</span>)</span><br><span class="line">.gte(<span class="string">"2018-02-02 05:12:03"</span>));</span><br><span class="line">AggregationBuilder aggregationBuilder = AggregationBuilders.cardinality(<span class="string">"count"</span>).field(<span class="string">"deviceId"</span>);</span><br><span class="line">filterAggregationBuilder.subAggregation(aggregationBuilder);</span><br><span class="line">SearchResponse response = requestBuilder.addAggregation(filterAggregationBuilder)</span><br><span class="line">        .setSize(<span class="number">0</span>)</span><br><span class="line">        .execute()</span><br><span class="line">        .actionGet();</span><br><span class="line">Filter filter = response.getAggregations().get(<span class="string">"count_by_time"</span>);</span><br><span class="line">Cardinality agg = filter.getAggregations().get(<span class="string">"count"</span>);</span><br><span class="line"><span class="keyword">long</span> count = agg.getValue();</span><br></pre></td></tr></table></figure>
@@ -146,14 +150,14 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    "aggregations" : &#123;</span><br><span class="line">        "t_shirts" : &#123;</span><br><span class="line">            "doc_count" : 3,</span><br><span class="line">            "avg_price" : &#123; "value" : 128.33333333333334 &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以在Java中，先从作为父聚合的过滤聚合获取到子聚合，最后得到统计数据。</p>
-<h2 id="Date-Histogram-Aggregation"><a href="#Date-Histogram-Aggregation" class="headerlink" title="Date Histogram Aggregation"></a>Date Histogram Aggregation</h2><p>利用时间直方图聚合，可以很方便获取每个时间间隔内的document数。具体使用方法如下：</p>
+<h3 id="Date-Histogram-Aggregation"><a href="#Date-Histogram-Aggregation" class="headerlink" title="Date Histogram Aggregation"></a>Date Histogram Aggregation</h3><p>利用时间直方图聚合，可以很方便获取每个时间间隔内的document数。具体使用方法如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"sales_over_time"</span> : &#123;</span><br><span class="line">            <span class="attr">"date_histogram"</span> : &#123;</span><br><span class="line">                <span class="attr">"field"</span> : <span class="string">"date"</span>,</span><br><span class="line">                <span class="attr">"interval"</span> : <span class="string">"1M"</span>,</span><br><span class="line">                <span class="attr">"format"</span> : <span class="string">"yyyy-MM-dd"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>返回结果如下：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    "aggregations": &#123;</span><br><span class="line">        "sales_over_time": &#123;</span><br><span class="line">            "buckets": [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-01-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1420070400000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">3</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-02-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1422748800000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">2</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-03-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1425168000000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">2</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>从结果看出，通过时间直方图聚合，可以将文档分桶进行聚合，每个桶存储一个时间段内的所有文档。</p>
-<h3 id="Date-Histogram-Aggregation留的坑"><a href="#Date-Histogram-Aggregation留的坑" class="headerlink" title="Date Histogram Aggregation留的坑"></a>Date Histogram Aggregation留的坑</h3><p>使用ElasticSearch自带的直方图聚合可以很方便地获取根据时间统计的直方图数据。但是，直接使用会出现一些问题，下面举个栗子。</p>
+<h4 id="Date-Histogram-Aggregation留的坑"><a href="#Date-Histogram-Aggregation留的坑" class="headerlink" title="Date Histogram Aggregation留的坑"></a>Date Histogram Aggregation留的坑</h4><p>使用ElasticSearch自带的直方图聚合可以很方便地获取根据时间统计的直方图数据。但是，直接使用会出现一些问题，下面举个栗子。</p>
 <p>具体场景是这样，在项目中需要获得基于时间的直方图数据，时间范围为48h，分为12个时间段，所以时间间隔为4h。下面给出查询语句：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"detectionTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"from"</span>: <span class="string">"2018-08-29 15:00:27"</span>,</span><br><span class="line">                        <span class="attr">"to"</span>: <span class="string">"2018-08-31 15:00:27"</span>,</span><br><span class="line">                        <span class="attr">"format"</span>: <span class="string">"YYYY-MM-dd HH:mm:ss"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                <span class="attr">"isrisk"</span>: &#123;</span><br><span class="line">                    <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                        <span class="attr">"term"</span>: &#123;</span><br><span class="line">                            <span class="attr">"isEnvironmentRisk.keyword"</span>: <span class="string">"Y"</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                        <span class="attr">"riskytrend"</span>: &#123;</span><br><span class="line">                            <span class="attr">"date_histogram"</span>: &#123;</span><br><span class="line">                                <span class="attr">"field"</span>: <span class="string">"detectionTime"</span>,</span><br><span class="line">                                <span class="attr">"interval"</span>: <span class="string">"240m"</span>,</span><br><span class="line">                                <span class="attr">"min_doc_count"</span>: <span class="number">0</span>,</span><br><span class="line">                                <span class="attr">"extended_bounds"</span>: &#123;</span><br><span class="line">                                      <span class="attr">"min"</span>: <span class="string">"2018-08-29 15:00:27"</span>,</span><br><span class="line">                                      <span class="attr">"max"</span>: <span class="string">"2018-08-31 15:00:27"</span></span><br><span class="line">                                  &#125;</span><br><span class="line">                            &#125;,</span><br><span class="line">                            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                                <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                                    <span class="attr">"cardinality"</span>: &#123;</span><br><span class="line">                                        <span class="attr">"field"</span>: <span class="string">"deviceId"</span></span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -173,13 +177,13 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">offsetHelper</span><span class="params">(String from, String to, Integer group)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">    Date start = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(from);</span><br><span class="line">    Date firstBucket = <span class="keyword">new</span> Date(</span><br><span class="line">            (<span class="keyword">long</span>) (Math.floor(</span><br><span class="line">                    (start.getTime() / <span class="number">1000.0</span> / <span class="number">60.0</span> - <span class="number">0</span>)</span><br><span class="line">                            / intervalHelper(from, to, group))</span><br><span class="line">                    * intervalHelper(from, to, group) + <span class="number">0</span>) * <span class="number">1000</span> * <span class="number">60</span>);</span><br><span class="line">    <span class="keyword">return</span> String.valueOf(DateUtil.timeDiffOnHour(start, firstBucket) * <span class="number">60</span> - intervalHelper(from, to, group)) + <span class="string">"m"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的代码主要思想是，计算 bucket_key和实际时间在时间小时上的差，然后用这个时间差减去分桶间隔得到的值可以作为offset。</p>
-<h2 id="子聚合"><a href="#子聚合" class="headerlink" title="子聚合"></a>子聚合</h2><p>通过在聚合中添加子聚合，可以对父聚合过滤后的document进行聚合。如，使用<strong>date_histogram</strong>聚合对时间进行分桶之后，需要对每个桶中进行去重聚合（<strong>cardinality</strong>）。具体做法如下：</p>
+<h3 id="子聚合"><a href="#子聚合" class="headerlink" title="子聚合"></a>子聚合</h3><p>通过在聚合中添加子聚合，可以对父聚合过滤后的document进行聚合。如，使用<strong>date_histogram</strong>聚合对时间进行分桶之后，需要对每个桶中进行去重聚合（<strong>cardinality</strong>）。具体做法如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"endTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"from"</span>: <span class="string">"2018-02-02 05:12:03"</span>,</span><br><span class="line">                        <span class="attr">"to"</span>: <span class="string">"2018-02-03 05:12:03"</span>,</span><br><span class="line">                        <span class="attr">"format"</span>: <span class="string">"YYYY-MM-dd HH:mm:ss"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                <span class="attr">"runningtrend"</span>: &#123;</span><br><span class="line">                    <span class="attr">"date_histogram"</span>: &#123;</span><br><span class="line">                        <span class="attr">"field"</span>: <span class="string">"endTime"</span>,</span><br><span class="line">                        <span class="attr">"interval"</span>: <span class="string">"10m"</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"cardinality"</span>: &#123;</span><br><span class="line">                                <span class="attr">"field"</span>: <span class="string">"deviceId"</span></span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>注意上面的写法，命名为 <strong>uniq_attr</strong>的子聚合是和父聚合 <strong>runningtrend</strong>的聚合类型 <strong>date_histogram</strong>同级的。笔者开始将子聚合和父聚合的命名放在同级，得到的结果便是两个聚合并不是嵌套关系，而是并列的关系。正确语句得到的结果如下：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggregations"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"doc_count"</span>: <span class="number">18622</span>,</span><br><span class="line">            <span class="attr">"runningtrend"</span>: &#123;</span><br><span class="line">                <span class="attr">"buckets"</span>: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">"key_as_string"</span>: <span class="string">"2018-02-02 05:10:00"</span>,</span><br><span class="line">                        <span class="attr">"key"</span>: <span class="number">1517548200000</span>,</span><br><span class="line">                        <span class="attr">"doc_count"</span>: <span class="number">407</span>,</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"value"</span>: <span class="number">1</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">"key_as_string"</span>: <span class="string">"2018-02-02 05:20:00"</span>,</span><br><span class="line">                        <span class="attr">"key"</span>: <span class="number">1517548800000</span>,</span><br><span class="line">                        <span class="attr">"doc_count"</span>: <span class="number">511</span>,</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"value"</span>: <span class="number">1</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    .......</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h4><blockquote>
 <p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-aggregations-bucket-filter-aggregation.html">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-aggregations-bucket-filter-aggregation.html</a></p>
 </blockquote>
 
@@ -312,6 +316,50 @@
 </div>
     
         
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#ElasticSearch踩坑纪实——Aggregation">
+        <span class="has-mr-6">1</span>
+        <span>ElasticSearch踩坑纪实——Aggregation</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#聚合范围">
+        <span class="has-mr-6">1.1</span>
+        <span>聚合范围</span>
+        </a></li><li>
+        <a class="is-flex" href="#去重聚合">
+        <span class="has-mr-6">1.2</span>
+        <span>去重聚合</span>
+        </a></li><li>
+        <a class="is-flex" href="#过滤聚合">
+        <span class="has-mr-6">1.3</span>
+        <span>过滤聚合</span>
+        </a></li><li>
+        <a class="is-flex" href="#Date-Histogram-Aggregation">
+        <span class="has-mr-6">1.4</span>
+        <span>Date Histogram Aggregation</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Date-Histogram-Aggregation留的坑">
+        <span class="has-mr-6">1.4.1</span>
+        <span>Date Histogram Aggregation留的坑</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#子聚合">
+        <span class="has-mr-6">1.5</span>
+        <span>子聚合</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Reference">
+        <span class="has-mr-6">1.5.1</span>
+        <span>Reference</span>
+        </a></li></ul></li></ul></li></ul>
+            </div>
+        </div>
+    </div>
+
     
         <div class="card widget">
     <div class="card-content">
@@ -335,7 +383,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -354,7 +402,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -373,7 +421,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -392,7 +440,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -411,7 +459,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -562,7 +610,7 @@
             
             <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                    <img class="thumbnail" src="https://unsplash.com/photos/m_HRfLhgABo/download?force=true" alt="数据库事务">
                 </p>
             </a>
             
@@ -581,7 +629,7 @@
             
             <a href="/2019/08/29/Mybatis-Note/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                    <img class="thumbnail" src="https://unsplash.com/photos/PkbZahEG2Ng/download?force=true" alt="Mybatis Note">
                 </p>
             </a>
             
@@ -600,7 +648,7 @@
             
             <a href="/2018/12/01/openssl-cook-book/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                    <img class="thumbnail" src="https://unsplash.com/photos/g3f4p_eAb1M/download?force=true" alt="Openssl Cook Book">
                 </p>
             </a>
             
@@ -619,7 +667,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/qXwbygKtl9g/download?force=true" alt="Docker入门-第四篇（Swarms）">
                 </p>
             </a>
             
@@ -638,7 +686,7 @@
             
             <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                    <img class="thumbnail" src="https://unsplash.com/photos/hjEesK4KSDs/download?force=true" alt="Docker入门-第三篇（Services）">
                 </p>
             </a>
             
@@ -780,7 +828,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="ElasticSearch——Aggregation" height="28">
+                    <img src="/images/WechatIMG32.jpeg" alt="ElasticSearch——Aggregation" height="28">
                 
                 </a>
                 <p class="is-size-7">
