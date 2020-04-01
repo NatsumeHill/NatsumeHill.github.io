@@ -1,0 +1,10 @@
+# hexo robots.txt
+User-agent: * 
+Allow: /
+Allow: /archives/
+Disallow: /js/
+Disallow: /css/
+Disallow: /images/
+Disallow: /lib/
+Sitemap: https://natsumehill.github.io/sitemap.xml
+Sitemap: https://natsumehill.github.io/baidusitemap.xml

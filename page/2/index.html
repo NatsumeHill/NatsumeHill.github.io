@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>NatsumeHill&#39;s blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.svg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-17T06:05:51.000Z">2018-08-17</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 minutes read (About 553 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/08/17/ElasticSearch%E2%80%94%E2%80%94Filter/">ElasticSearch——Filter</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="过滤查询及过滤使用场景分析"><a href="#过滤查询及过滤使用场景分析" class="headerlink" title="过滤查询及过滤使用场景分析"></a>过滤查询及过滤使用场景分析</h1><p>在老版本的ElasticSearch中，过滤查询可以通过Filtered查询语句实现。但是在新版本中，Filtered查询语句已经被bool query取代。具体从哪个版本开始更改，由于没有找到相关资料不能确定。笔者在5.6.3版本中使用时已经发现不支持。</p>
+<p>使用过滤查询的好处是，检索引擎只判断是否匹配查询条件，而不会对每个document进行打分排序。性能比较起来快于普通的query。</p>
+<h2 id="bool-filter"><a href="#bool-filter" class="headerlink" title="bool.filter"></a>bool.filter</h2><p>在filter元素下指定的查询对评分没有影响 - 分数返回为0.分数仅受已指定查询的影响。例如，以下所有三个查询都返回状态字段包含术语“活动”的所有文档。 第一个查询为所有文档分配0分，因为没有指定评分查询：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GET _search</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"term"</span>: &#123;</span><br><span class="line">          <span class="attr">"status"</span>: <span class="string">"active"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在bool查询中添加match_all查询，为所有文档指定1.0分。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GET _search</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"must"</span>: &#123;</span><br><span class="line">        <span class="attr">"match_all"</span>: &#123;&#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"filter"</span>: &#123;</span><br><span class="line">        <span class="attr">"term"</span>: &#123;</span><br><span class="line">          <span class="attr">"status"</span>: <span class="string">"active"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面的constant_score查询的行为方式与上面的第二个示例完全相同。 constant_score查询为过滤器匹配的所有文档指定1.0分。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;GET _search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;constant_score&quot;: &#123;</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;term&quot;: &#123;</span><br><span class="line">          &quot;status&quot;: &quot;active&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="过滤查询和过滤聚合使用场景分析"><a href="#过滤查询和过滤聚合使用场景分析" class="headerlink" title="过滤查询和过滤聚合使用场景分析"></a>过滤查询和过滤聚合使用场景分析</h2><p>之前讨论过聚合查询的限定范围，聚合操作是在查询结果上进行实现的。如果没有查询语句，则默认为是在所有文档，类似于match_all。<br>如下，单独使用过滤聚合时，返回的文档依旧是所有文档。但是聚合结果是根据过滤后的文档进行统计的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"time"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"detectionTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"lte"</span>: <span class="string">"2018-01-04 14:56:27"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查询结果</span></span><br><span class="line">"hits": &#123;</span><br><span class="line">        "total": 32621,</span><br><span class="line">        "max_score": 1,</span><br><span class="line">        "hits": [</span><br><span class="line">            .....</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">"aggregations": &#123;</span><br><span class="line">        "time": &#123;</span><br><span class="line">            "doc_count": 5</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用bool.filter查询，然后对过滤结果进行聚合，也可以直接达到过滤聚合的目的，并且返回的查询文档为过滤后的结果。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html</a></p>
+</blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-16T12:52:14.000Z">2018-08-16</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 minutes read (About 411 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/08/16/ElasticSearch%E2%80%94%E2%80%94Scroll/">ElasticSearch——Scroll</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="ElasticSearch中的分页查询"><a href="#ElasticSearch中的分页查询" class="headerlink" title="ElasticSearch中的分页查询"></a>ElasticSearch中的分页查询</h1><p>在ElasticSreach中可以使用<em>setFrome(size)</em>来实现分页查询，具体查询方法如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>:<span class="number">100</span>,</span><br><span class="line">    <span class="attr">"frome"</span>:<span class="number">1000</span>,</span><br><span class="line">    <span class="attr">"query"</span> : &#123;</span><br><span class="line">        <span class="attr">"term"</span> : &#123; <span class="attr">"user"</span> : <span class="string">"kimchy"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index)</span><br><span class="line">                .setTypes(type)</span><br><span class="line">                .setQuery(boolQueryBuilder)</span><br><span class="line">                .addSort(sortQueryBuild)</span><br><span class="line">                .setFrom(skipSize)</span><br><span class="line">                .setSize(pageSize);</span><br></pre></td></tr></table></figure>
+
+<p>但是这种分页方式有个限制条件，size+from不能超过10000。除了这种方式，ElasticSearch提供了另外一个方法进行分页查询，scroll。</p>
+<h2 id="Scroll"><a href="#Scroll" class="headerlink" title="Scroll"></a>Scroll</h2><p>search 请求返回一个单一的结果“页”，而 scroll API 可以被用来检索大量的结果（甚至所有的结果），就像在传统数据库中使用的游标 cursor。</p>
+<p>scroll并不是为了实时的用户响应，而是为了处理大量的数据，例如，为了使用不同的配置来重新索引一个 index 到另一个 index 中去。</p>
+<p>为了使用 scroll，初始搜索请求应该在查询中指定 scroll 参数，这可以告诉 Elasticsearch 需要保持搜索的上下文环境多久。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST /twitter/_search?scroll=1m</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">100</span>,</span><br><span class="line">    <span class="attr">"query"</span>: &#123;</span><br><span class="line">        <span class="attr">"match"</span> : &#123;</span><br><span class="line">            <span class="attr">"title"</span> : <span class="string">"elasticsearch"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用上面的请求返回的结果中包含一个 scroll_id，这个 ID 可以被传递给 scroll API 来检索下一个批次的结果。<strong>注意，这里在获取下一个批次的结果时候，不需要指定index和type。</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST  /_search/scroll</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"scroll"</span> : <span class="string">"1m"</span>,</span><br><span class="line">    <span class="attr">"scroll_id"</span> : <span class="string">"DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ=="</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JavaAPI进行Scroll如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SearchResponse scrollResponse = client.prepareSearch(INDEX)</span><br><span class="line">    .setSearchType(SearchType.SCAN).setSize(<span class="number">10000</span>).setScroll(TimeValue.timeValueMinutes(<span class="number">1</span>))</span><br><span class="line">    .execute().actionGet();  </span><br><span class="line">count = scrollResponse.getHits().getTotalHits();<span class="comment">//第一次不返回数据</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>,sum=<span class="number">0</span>; sum&lt;count; i++)&#123;</span><br><span class="line">    scrollResponse = client.prepareSearchScroll(scrollResponse.getScrollId())  </span><br><span class="line">        .setScroll(TimeValue.timeValueMinutes(<span class="number">8</span>))  </span><br><span class="line">    .execute().actionGet();</span><br><span class="line">    sum += scrollResponse.getHits().hits().length;</span><br><span class="line">    System.out.println(<span class="string">"总量"</span>+count+<span class="string">" 已经查到"</span>+sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="清除-scroll-API"><a href="#清除-scroll-API" class="headerlink" title="清除 scroll API"></a>清除 scroll API</h2><p>搜索上下文当 scroll 超时就会自动移除。但是保持 scroll 存活需要代价，所以 当scroll不再被使用的时候可以通过 clear-scroll 显式地清除：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DELETE /_search/scroll</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"scroll_id"</span> : <span class="string">"DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ=="</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样，上面的操作不需要指定index和type。</p>
+<p>可以通过传递<strong>All</strong>参数，删除当前存在的所有Scroll。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE /_search/scroll/_all</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-request-scroll.html">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-request-scroll.html</a></p>
+</blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-16T12:35:59.000Z">2018-08-16</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    10 minutes read (About 1544 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/08/16/ElasticSearch%E2%80%94%E2%80%94Aggregation/">ElasticSearch——Aggregation</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="ElasticSearch踩坑纪实——Aggregation"><a href="#ElasticSearch踩坑纪实——Aggregation" class="headerlink" title="ElasticSearch踩坑纪实——Aggregation"></a>ElasticSearch踩坑纪实——Aggregation</h1><p>在进行聚合查询的时候，默认会返回size大小的匹配的document。</p>
+<h2 id="聚合范围"><a href="#聚合范围" class="headerlink" title="聚合范围"></a>聚合范围</h2><p>聚合可以与搜索请求同时执行，但是我们需要理解一个新概念： 范围 。 默认情况下，聚合与查询是对同一范围进行操作的，也就是说，聚合是基于我们查询匹配的文档集合进行计算的。</p>
+<h2 id="去重聚合"><a href="#去重聚合" class="headerlink" title="去重聚合"></a>去重聚合</h2><p>使用Cardinality Aggregation可以统计根据某一字段，不重复值的总数。使用方法如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RestAPI 版本</span></span><br><span class="line">POST /sales/_search?size=0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"type_count"</span> : &#123;</span><br><span class="line">            <span class="attr">"cardinality"</span> : &#123;</span><br><span class="line">                <span class="attr">"field"</span> : <span class="string">"type"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Java 版本</span></span><br><span class="line">AggregationBuilder aggregationBuilder = AggregationBuilders.cardinality(<span class="string">"count"</span>).field(<span class="string">"deviceId"</span>);</span><br><span class="line">SearchResponse response = requestBuilder.addAggregation(aggregationBuilder)</span><br><span class="line">                .setSize(<span class="number">0</span>)</span><br><span class="line">                .execute()</span><br><span class="line">                .actionGet();</span><br><span class="line">Cardinality agg = response.getAggregations().get(<span class="string">"count"</span>);</span><br><span class="line"><span class="keyword">int</span> count = agg.getValue()</span><br></pre></td></tr></table></figure>
+
+<h2 id="过滤聚合"><a href="#过滤聚合" class="headerlink" title="过滤聚合"></a>过滤聚合</h2><p>在聚合中插入子查询，可以对查询过后的结果进行聚合，具体使用方法如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RestAPI方式</span></span><br><span class="line">POST /sales/_search?size=0</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"t_shirts"</span> : &#123;</span><br><span class="line">            <span class="attr">"filter"</span> : &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"type"</span>: <span class="string">"t-shirt"</span> &#125; &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">                <span class="attr">"avg_price"</span> : &#123; <span class="attr">"avg"</span> : &#123; <span class="attr">"field"</span> : <span class="string">"price"</span> &#125; &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JAVA 方式</span></span><br><span class="line">SearchRequestBuilder requestBuilder = client.prepareSearch(<span class="string">"program_running_normal"</span>).setTypes(<span class="string">"normal"</span>);</span><br><span class="line">AggregationBuilder filterAggregationBuilder = AggregationBuilders.filter(<span class="string">"count_by_time"</span>,</span><br><span class="line">        QueryBuilders.rangeQuery(<span class="string">"endTime"</span>)</span><br><span class="line">.gte(<span class="string">"2018-02-02 05:12:03"</span>));</span><br><span class="line">AggregationBuilder aggregationBuilder = AggregationBuilders.cardinality(<span class="string">"count"</span>).field(<span class="string">"deviceId"</span>);</span><br><span class="line">filterAggregationBuilder.subAggregation(aggregationBuilder);</span><br><span class="line">SearchResponse response = requestBuilder.addAggregation(filterAggregationBuilder)</span><br><span class="line">        .setSize(<span class="number">0</span>)</span><br><span class="line">        .execute()</span><br><span class="line">        .actionGet();</span><br><span class="line">Filter filter = response.getAggregations().get(<span class="string">"count_by_time"</span>);</span><br><span class="line">Cardinality agg = filter.getAggregations().get(<span class="string">"count"</span>);</span><br><span class="line"><span class="keyword">long</span> count = agg.getValue();</span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子当中，在过滤聚合中添加子查询作为过滤条件，然后添加子聚合进额外的聚合操作。返回结果如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    "aggregations" : &#123;</span><br><span class="line">        "t_shirts" : &#123;</span><br><span class="line">            "doc_count" : 3,</span><br><span class="line">            "avg_price" : &#123; "value" : 128.33333333333334 &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以在Java中，先从作为父聚合的过滤聚合获取到子聚合，最后得到统计数据。</p>
+<h2 id="Date-Histogram-Aggregation"><a href="#Date-Histogram-Aggregation" class="headerlink" title="Date Histogram Aggregation"></a>Date Histogram Aggregation</h2><p>利用时间直方图聚合，可以很方便获取每个时间间隔内的document数。具体使用方法如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span> : &#123;</span><br><span class="line">        <span class="attr">"sales_over_time"</span> : &#123;</span><br><span class="line">            <span class="attr">"date_histogram"</span> : &#123;</span><br><span class="line">                <span class="attr">"field"</span> : <span class="string">"date"</span>,</span><br><span class="line">                <span class="attr">"interval"</span> : <span class="string">"1M"</span>,</span><br><span class="line">                <span class="attr">"format"</span> : <span class="string">"yyyy-MM-dd"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回结果如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">    "aggregations": &#123;</span><br><span class="line">        "sales_over_time": &#123;</span><br><span class="line">            "buckets": [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-01-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1420070400000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">3</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-02-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1422748800000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">2</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="attr">"key_as_string"</span>: <span class="string">"2015-03-01"</span>,</span><br><span class="line">                    <span class="attr">"key"</span>: <span class="number">1425168000000</span>,</span><br><span class="line">                    <span class="attr">"doc_count"</span>: <span class="number">2</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从结果看出，通过时间直方图聚合，可以将文档分桶进行聚合，每个桶存储一个时间段内的所有文档。</p>
+<h3 id="Date-Histogram-Aggregation留的坑"><a href="#Date-Histogram-Aggregation留的坑" class="headerlink" title="Date Histogram Aggregation留的坑"></a>Date Histogram Aggregation留的坑</h3><p>使用ElasticSearch自带的直方图聚合可以很方便地获取根据时间统计的直方图数据。但是，直接使用会出现一些问题，下面举个栗子。</p>
+<p>具体场景是这样，在项目中需要获得基于时间的直方图数据，时间范围为48h，分为12个时间段，所以时间间隔为4h。下面给出查询语句：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"detectionTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"from"</span>: <span class="string">"2018-08-29 15:00:27"</span>,</span><br><span class="line">                        <span class="attr">"to"</span>: <span class="string">"2018-08-31 15:00:27"</span>,</span><br><span class="line">                        <span class="attr">"format"</span>: <span class="string">"YYYY-MM-dd HH:mm:ss"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                <span class="attr">"isrisk"</span>: &#123;</span><br><span class="line">                    <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                        <span class="attr">"term"</span>: &#123;</span><br><span class="line">                            <span class="attr">"isEnvironmentRisk.keyword"</span>: <span class="string">"Y"</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                        <span class="attr">"riskytrend"</span>: &#123;</span><br><span class="line">                            <span class="attr">"date_histogram"</span>: &#123;</span><br><span class="line">                                <span class="attr">"field"</span>: <span class="string">"detectionTime"</span>,</span><br><span class="line">                                <span class="attr">"interval"</span>: <span class="string">"240m"</span>,</span><br><span class="line">                                <span class="attr">"min_doc_count"</span>: <span class="number">0</span>,</span><br><span class="line">                                <span class="attr">"extended_bounds"</span>: &#123;</span><br><span class="line">                                      <span class="attr">"min"</span>: <span class="string">"2018-08-29 15:00:27"</span>,</span><br><span class="line">                                      <span class="attr">"max"</span>: <span class="string">"2018-08-31 15:00:27"</span></span><br><span class="line">                                  &#125;</span><br><span class="line">                            &#125;,</span><br><span class="line">                            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                                <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                                    <span class="attr">"cardinality"</span>: &#123;</span><br><span class="line">                                        <span class="attr">"field"</span>: <span class="string">"deviceId"</span></span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查询的返回结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-29 12:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535544000000</span>, <span class="attr">"doc_count"</span>: <span class="number">5</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">2</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-29 16:00:00", "key": 1535558400000, "doc_count": 10, "uniq_attr":&#123;"value": 2…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-29 20:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535572800000</span>, <span class="attr">"doc_count"</span>: <span class="number">0</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">0</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-30 00:00:00", "key": 1535587200000, "doc_count": 0, "uniq_attr":&#123;"value": 0…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-30 04:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535601600000</span>, <span class="attr">"doc_count"</span>: <span class="number">0</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">0</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-30 08:00:00", "key": 1535616000000, "doc_count": 2, "uniq_attr":&#123;"value": 1…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-30 12:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535630400000</span>, <span class="attr">"doc_count"</span>: <span class="number">1</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">1</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-30 16:00:00", "key": 1535644800000, "doc_count": 3, "uniq_attr":&#123;"value": 1…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-30 20:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535659200000</span>, <span class="attr">"doc_count"</span>: <span class="number">0</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">0</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-31 00:00:00", "key": 1535673600000, "doc_count": 0, "uniq_attr":&#123;"value": 0…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-31 04:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535688000000</span>, <span class="attr">"doc_count"</span>: <span class="number">0</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">0</span>…&#125;,</span><br><span class="line">&#123;"key_as_string": "2018-08-31 08:00:00", "key": 1535702400000, "doc_count": 10, "uniq_attr":&#123;"value": 2…&#125;,</span><br><span class="line">&#123;<span class="attr">"key_as_string"</span>: <span class="string">"2018-08-31 12:00:00"</span>, <span class="attr">"key"</span>: <span class="number">1535716800000</span>, <span class="attr">"doc_count"</span>: <span class="number">4</span>, <span class="attr">"uniq_attr"</span>:&#123;<span class="attr">"value"</span>: <span class="number">1</span>…&#125;</span><br></pre></td></tr></table></figure>
+
+<p>仔细查看上面的数据，根据官方文档的分桶原则 <strong>数据在 [0,50) 落在桶0，在 [50,100) 落在桶50，以此类推</strong>，理论上我们需要的分桶是 <strong>[2018-08-29 11:00:00, 2018-08-29 15:00:00), [2018-08-29 15:00:00, 2018-08-29 19:00:00) ….</strong>。但是查询所得结果中的第一个桶从 <strong>2018-08-29 12:00:00</strong>进行统计，不符合我们的实际需求。导致这个的主要原因就在于ES的 <strong>bucket_key</strong>的计算算法，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Math.floor((value - offset) / interval) * interval + offset</span><br></pre></td></tr></table></figure>
+
+<p>offset参数的具体作用请参考官方文档，当使用这个算法对数值进行计算时，可能不会产生较大偏差（这里笔者没有测试）。我们写一个小测试，使用上面的算法计算对应时间的 <strong>bucket_key</strong> 看看究竟发生了什么，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">time</span><span class="params">()</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">    Date now = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(<span class="string">"2018-08-31 14:21:36"</span>);</span><br><span class="line">    logger.info(<span class="string">"Now: &#123;&#125;"</span>, <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(now));</span><br><span class="line">    Date start = <span class="keyword">new</span> Date((<span class="keyword">long</span>) (Math.floor((now.getTime()/<span class="number">1000.0</span>/<span class="number">60.0</span> - <span class="number">0</span>)/<span class="number">240.0</span>)*<span class="number">240.0</span>+<span class="number">0</span>)*<span class="number">1000</span>*<span class="number">60</span>);</span><br><span class="line">    logger.info(<span class="string">"Start: &#123;&#125;"</span>, <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).format(start));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行上面的代码，得到如下日志输出：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2018-08-31 16:12:19.432 [main] INFO  c.p.a.s.w.s.i.OverviewServiceImplTest - Now: 2018-08-31 14:21:36</span><br><span class="line">2018-08-31 16:12:19.434 [main] INFO  c.p.a.s.w.s.i.OverviewServiceImplTest - Start: 2018-08-31 12:00:00</span><br></pre></td></tr></table></figure>
+
+<p>我们看到时间 <strong>2018-08-31 14:21:36</strong> 计算出来的 <strong>bucket_key</strong> 为 <strong>12:00:00</strong>，相差如此巨大。为了解决这个问题，我们可以在Date Histogram中添加 offset参数。offset可以通过动态计算得到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">offsetHelper</span><span class="params">(String from, String to, Integer group)</span> <span class="keyword">throws</span> ParseException </span>&#123;</span><br><span class="line">    Date start = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd HH:mm:ss"</span>).parse(from);</span><br><span class="line">    Date firstBucket = <span class="keyword">new</span> Date(</span><br><span class="line">            (<span class="keyword">long</span>) (Math.floor(</span><br><span class="line">                    (start.getTime() / <span class="number">1000.0</span> / <span class="number">60.0</span> - <span class="number">0</span>)</span><br><span class="line">                            / intervalHelper(from, to, group))</span><br><span class="line">                    * intervalHelper(from, to, group) + <span class="number">0</span>) * <span class="number">1000</span> * <span class="number">60</span>);</span><br><span class="line">    <span class="keyword">return</span> String.valueOf(DateUtil.timeDiffOnHour(start, firstBucket) * <span class="number">60</span> - intervalHelper(from, to, group)) + <span class="string">"m"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码主要思想是，计算 bucket_key和实际时间在时间小时上的差，然后用这个时间差减去分桶间隔得到的值可以作为offset。</p>
+<h2 id="子聚合"><a href="#子聚合" class="headerlink" title="子聚合"></a>子聚合</h2><p>通过在聚合中添加子聚合，可以对父聚合过滤后的document进行聚合。如，使用<strong>date_histogram</strong>聚合对时间进行分桶之后，需要对每个桶中进行去重聚合（<strong>cardinality</strong>）。具体做法如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"filter"</span>: &#123;</span><br><span class="line">                <span class="attr">"range"</span>: &#123;</span><br><span class="line">                    <span class="attr">"endTime"</span>: &#123;</span><br><span class="line">                        <span class="attr">"from"</span>: <span class="string">"2018-02-02 05:12:03"</span>,</span><br><span class="line">                        <span class="attr">"to"</span>: <span class="string">"2018-02-03 05:12:03"</span>,</span><br><span class="line">                        <span class="attr">"format"</span>: <span class="string">"YYYY-MM-dd HH:mm:ss"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                <span class="attr">"runningtrend"</span>: &#123;</span><br><span class="line">                    <span class="attr">"date_histogram"</span>: &#123;</span><br><span class="line">                        <span class="attr">"field"</span>: <span class="string">"endTime"</span>,</span><br><span class="line">                        <span class="attr">"interval"</span>: <span class="string">"10m"</span></span><br><span class="line">                    &#125;,</span><br><span class="line">                    <span class="attr">"aggs"</span>: &#123;</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"cardinality"</span>: &#123;</span><br><span class="line">                                <span class="attr">"field"</span>: <span class="string">"deviceId"</span></span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意上面的写法，命名为 <strong>uniq_attr</strong>的子聚合是和父聚合 <strong>runningtrend</strong>的聚合类型 <strong>date_histogram</strong>同级的。笔者开始将子聚合和父聚合的命名放在同级，得到的结果便是两个聚合并不是嵌套关系，而是并列的关系。正确语句得到的结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggregations"</span>: &#123;</span><br><span class="line">        <span class="attr">"last_hours"</span>: &#123;</span><br><span class="line">            <span class="attr">"doc_count"</span>: <span class="number">18622</span>,</span><br><span class="line">            <span class="attr">"runningtrend"</span>: &#123;</span><br><span class="line">                <span class="attr">"buckets"</span>: [</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">"key_as_string"</span>: <span class="string">"2018-02-02 05:10:00"</span>,</span><br><span class="line">                        <span class="attr">"key"</span>: <span class="number">1517548200000</span>,</span><br><span class="line">                        <span class="attr">"doc_count"</span>: <span class="number">407</span>,</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"value"</span>: <span class="number">1</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;,</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="attr">"key_as_string"</span>: <span class="string">"2018-02-02 05:20:00"</span>,</span><br><span class="line">                        <span class="attr">"key"</span>: <span class="number">1517548800000</span>,</span><br><span class="line">                        <span class="attr">"doc_count"</span>: <span class="number">511</span>,</span><br><span class="line">                        <span class="attr">"uniq_attr"</span>: &#123;</span><br><span class="line">                            <span class="attr">"value"</span>: <span class="number">1</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    .......</span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><blockquote>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-aggregations-bucket-filter-aggregation.html">https://www.elastic.co/guide/en/elasticsearch/reference/6.3/search-aggregations-bucket-filter-aggregation.html</a></p>
+</blockquote>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-08-09T02:07:25.000Z">2018-08-09</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 minutes read (About 664 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/08/09/%E8%AE%B0%E4%B8%80%E6%AC%A1%E5%88%A0%E9%99%A4%E9%A6%96%E4%B8%AA%E9%80%BB%E8%BE%91%E5%88%86%E5%8C%BA%E5%AF%BC%E8%87%B4%E7%B3%BB%E7%BB%9F%E5%BC%95%E5%AF%BC%E9%94%99%E8%AF%AF/">记一次删除首个逻辑分区导致系统引导错误</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="记一次误删分区"><a href="#记一次误删分区" class="headerlink" title="记一次误删分区"></a>记一次误删分区</h1><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>事情的经过是这样，由于在安装Ubuntu/Windows7双系统时，Ubuntu分区规划不合理，导致在使用过程中/home目录空间严重不足。以下是我的分区方案：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors</span><br><span class="line">Units: sectors of 1 * 512 = 512 bytes</span><br><span class="line">Sector size (logical/physical): 512 bytes / 4096 bytes</span><br><span class="line">I/O size (minimum/optimal): 4096 bytes / 4096 bytes</span><br><span class="line">Disklabel type: dos</span><br><span class="line">Disk identifier: 0x00003702</span><br><span class="line"></span><br><span class="line">Device     Boot     Start       End   Sectors   Size Id Type</span><br><span class="line">/dev/sda1  *         2048    206847    204800   100M  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda2          206848 209717247 209510400  99.9G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda3       209717248 588597247 378880000 180.7G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda4       588599294 976771071 388171778 185.1G  f W95 Ext'd (LBA)</span><br><span class="line">/dev/sda5       588599296 767055871 178456576  85.1G  7 HPFS/NTFS/exFAT</span><br><span class="line">/dev/sda6       767057920 782680063  15622144   7.5G 82 Linux swap / Sol</span><br><span class="line">/dev/sda7       782682112 852680703  69998592  33.4G 83 Linux</span><br><span class="line">/dev/sda8       852682752 976771071 124088320  59.2G 83 Linux</span><br><span class="line"></span><br><span class="line">Partition 4 does not start on physical sector boundary.</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/partition.png" alt="分区"></p>
+<p>如上图所示，ubuntu的所属分区是通过创建一个扩展分区得到的。/dev/sda7为安装ubuntu挂载在/home目录。/dev/sda5是我从原来分配给windows的NTFS磁盘格式化过来，并现在被挂载在/home。</p>
+<p>在操作的时候，直接通过图像界面删除了/dev/sda5分区，由于该分区为扩展分区第一个逻辑分区。<em>扩展分区中逻辑驱动器的引导记录是链式的。每一个逻辑分区都有一个和主引导扇区结构类似的扩展引导记录(EBR)，其分区表的第一项指向该逻辑分区本身的引导扇区，第二项指向下一个逻辑驱动器的EBR，分区表第三、第四项没有用到。</em>于是就导致我的整个扩展分区的逻辑分区都找不到了。ubuntu自然就不能被引导。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>这里我的解决方案是，制作一个具有pe系统的U盘启动盘。保证pe中安装有DiskGenius分区工具。当然，在误操作分区的时候，一定不能对相应分区进行写操作。使用pe中的DiskGenius分区工具，可以直接回复误删分区。找回分区后，需要一个可用的Ubuntu Live。可以刻录镜像到U盘，也可以直接使用Ubuntu 光盘。进入Ubuntu Live。挂载所有Ubuntu的分区，然后chroot到挂载后的分区中，重新安装grub。重启就可以了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 切换root用户</span></span><br><span class="line">sudo -i</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 我的ubuntu中 /dev/sda8挂载在 / 目录的</span></span><br><span class="line">mount /dev/sda8 /mnt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 我的ubuntu中 /dev/sda8挂载在 /home 目录</span></span><br><span class="line">mount /dev/sda7 /mnt/home</span><br><span class="line"><span class="meta">#</span><span class="bash"> 挂载系统设备</span></span><br><span class="line">mount –bind /proc /mnt/proc</span><br><span class="line">mount –bind /dev /mnt/dev</span><br><span class="line">mount –bind /sys /mnt/sys</span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换root目录</span></span><br><span class="line">chroot /mnt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重新安装grub</span></span><br><span class="line">grub-install /dev/sda</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-26T08:44:21.000Z">2018-07-26</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 minutes read (About 1116 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/26/Spring%E5%85%A5%E9%97%A8/">Spring入门</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="Spring入门"><a href="#Spring入门" class="headerlink" title="Spring入门"></a>Spring入门</h1><p>记录学习《Spring实战》过程中的笔记</p>
+<h2 id="第一个项目"><a href="#第一个项目" class="headerlink" title="第一个项目"></a>第一个项目</h2><p>使用maven管理依赖包，创建一个简单的项目，目录结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── pom.xml</span><br><span class="line">├── src</span><br><span class="line">│   ├── main</span><br><span class="line">│   └── test</span><br><span class="line">└── target</span><br><span class="line">    ├── classes</span><br><span class="line">    ├── generated-sources</span><br><span class="line">    ├── generated-test-sources</span><br><span class="line">    └── test-classes</span><br></pre></td></tr></table></figure>
+
+<p>pom.xml中添加以下依赖项：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>LATEST<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>添加一个CompactDisc接口，接口包含一个play方法：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CompactDisc</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">play</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>添加一个类，实现CompactDisc接口：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SgtPeppers</span> <span class="keyword">implements</span> <span class="title">CompactDisc</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String title = <span class="string">"Sgt. Pepper's Lonely Hearts ClubBand"</span>;</span><br><span class="line">    <span class="keyword">private</span> String artist = <span class="string">"The Beatles"</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Playing "</span>+title+<span class="string">" by "</span>+artist);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为该类添加了 <strong>@Component</strong> 注解，表明该类会作为组件类，并告知Spring要为这个类创建bean，这样就没有必要显式配置SgtPeppersbean。</p>
+<p>注意的是，组件扫描在默认情况下是不启用的。还是需要显式配置一下Spring，从而命令Spring去寻找带有 <strong>@Component</strong> 注解的类，并为其创建bean。</p>
+<ol start="3">
+<li>创建配置类：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDPlayerConfig</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类CDPlayerConfig通过Java代码定义了Spring的装配规则。这里，在类里面没有显式地声明任何bean，而是使用注解 <strong>@ComponentScan</strong> ，这个注解能够在Spring中启用组件扫描。在没有额外配置的情况下， <strong>@ComponentScan</strong>注解会扫描与配置类相同的包。</p>
+<ol start="4">
+<li>创建测试</li>
+</ol>
+<p>这里创建一个JUnit测试，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringJUnit4ClassRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= CDPlayerConfig<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">SgtPeppersTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CompactDisc cd;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">play</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        cd.play();</span><br><span class="line">        assertNotNull(cd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解 <strong>@RunWith</strong>注解让测试开始的时候自动创建Spring应用上下文。注解 <strong>@ContextConfiguration</strong>告诉测试类从哪里加在配置。</p>
+<h2 id="通过Java代码装配bean"><a href="#通过Java代码装配bean" class="headerlink" title="通过Java代码装配bean"></a>通过Java代码装配bean</h2><p>在我们的第一个项目中，spring上下文的配置没有使用xml，并且创建的SpringConfig类没有实际的实现代码配置。而是使用的组件扫描和自动装配。下面尝试在SpringConfig类中利用java代码进行显式配置。</p>
+<h3 id="创建配置类"><a href="#创建配置类" class="headerlink" title="创建配置类"></a>创建配置类</h3><p>使用之前创建的CDPlayerConfig类，移除 <strong>@ComponentScan</strong>注解。</p>
+<h3 id="声明简单的bean"><a href="#声明简单的bean" class="headerlink" title="声明简单的bean"></a>声明简单的bean</h3><p>在CDPlayerConfig类中添加一个方法用于创建所需类型的实例，然后给这个方法添加 <strong>@Bean</strong> 注解。下面的代码声明了CompactDisc bean:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisc <span class="title">sgtPeppers</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SgtPeppers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>@<strong>Bean</strong>注解会告诉Spring这个方法将返回一个对象，该对象要注册为Spring应用上下文中的bean。方法体中包含了最终产生bean实例的逻辑。</p>
+<p>默认情况下，bean的ID与带有@<strong>Bean</strong>注解的方法名是一样的。在本例中，bean的名字将会是sgtPeppers。可以通过指定 <strong>name</strong> 属性给bean设置不同的名字：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span>(name=<span class="string">"customname"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompactDisc <span class="title">sgtPeppers</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SgtPeppers();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在方法的逻辑中，不管通过何种方式实现，只要最终能够生成一个CompactDisc实例即可。</p>
+<h3 id="借助JavaConfig实现注入"><a href="#借助JavaConfig实现注入" class="headerlink" title="借助JavaConfig实现注入"></a>借助JavaConfig实现注入</h3><p>在JavaConfig中装配bean的最简单方式就是引用创建bean的方法。例如，下面就是一种声明CDPlayer的可行方案：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MediaPlayer <span class="title">cdPlayer</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(sgtPeppers());<span class="comment">// bean 默认是单例的，这里创建CDPlayerbean时，不会真的调用sgtPeppers。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在cdPlayer()方法中，看起来似乎是通过调用sgtPeppers()方法得到的CompactDisc实例，其实由于sgtPeppers()方法加上了@Bean注解，Spring会拦截所有对该方法的调用，并且保证直接返回该方法所创建的bean，而不是每次都对其进行实际的调用。</p>
+<p>还有一种更简单的装配方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MediaPlayer <span class="title">cdPlayer</span><span class="params">(CompactDisc cd)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> CDPlayer(cd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面的方式引用其他的bean通常是最佳的选择，因为不要求将CompactDisc声明到同一个配置类中。在这里甚至没有要求CompactDisc必须要在JavaConfig中声明，实际上它可以通过组件扫描功能自定发现或者通过XML来进行配置。可以将配置分散到多个配置类，XML文件以及自动扫描和装配bean之中，只要功能完整健全即可。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-24T07:53:27.000Z">2018-07-24</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 minutes read (About 852 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/24/WAF%E6%94%BB%E9%98%B2/">WAF攻防</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="WAF攻防"><a href="#WAF攻防" class="headerlink" title="WAF攻防"></a>WAF攻防</h1><h2 id="架构层绕过WAF"><a href="#架构层绕过WAF" class="headerlink" title="架构层绕过WAF"></a>架构层绕过WAF</h2><h3 id="寻找源站"><a href="#寻找源站" class="headerlink" title="寻找源站"></a>寻找源站</h3><p>当前多数云WAF架构，例如百度云加速、360安全卫士等，通过更改DNS解析，把流量引入WAF集群，流量经过检测后转发请求到源站。如图，liusscs.com接入接入WAF后，liusscs.comd的DNS解析结果指向WAF集群，用户的请求将发送给WAF集群，WAF集群经过检测认为非攻击请求再转发给源站。<br>从云WAF架构考虑，如果HTTP请求都没有经过WAF集群直接到达源站，顺理成章bypass WAF。所以关键在于发现源站的IP地址。常用方法如下，可能还有很多很多思路：</p>
+<ol>
+<li><p>信息泄露发现源站IP。信息泄露的途径很多，细心留言往往能发现。常用的方法如下：</p>
+<ul>
+<li>网站页面注销是否包含源站IP。</li>
+<li>GIHUB源代码泄露是否包含源站IP。</li>
+<li>未接入WAF前，真实IP地址是否被搜索引擎等服务收录。</li>
+</ul>
+</li>
+<li><p>穷举IP地址，根据特征发现服务器真实IP地址。对于国内的服务器，穷举国内的IP，访问每个IP的HTTP服务，根据页面特征检测响应页面，判断IP是否为源站IP地址。曾经乌云有人分享过，完成一次国内IP扫描只需要8-9小时，可是现在找不到那篇文章。</p>
+</li>
+</ol>
+<h3 id="利用同网段"><a href="#利用同网段" class="headerlink" title="利用同网段"></a>利用同网段</h3><p>一些在云服务商的站点，同时使用云服务商提供的WAF服务。当流量不是通过DNS解析引流到WAF，流量必须经过WAF的检测，这是不能通过发行源站进行绕过。可以考虑在云服务商买一台VPS，通过VPS攻击目标站点，因为流量是局域网，可能不经过WAF检测，实现绕过。能不能成功，关键在于云服务商的网络配置。</p>
+<h3 id="利用边界漏洞"><a href="#利用边界漏洞" class="headerlink" title="利用边界漏洞"></a>利用边界漏洞</h3><p>如果未能发现源站IP，可以尝试寻找子站的SSRF漏洞。如果子站访问目标站不经过WAF集群，可以利用SSRF漏洞来绕过WAF。</p>
+<h2 id="资源限制角度绕过WAF"><a href="#资源限制角度绕过WAF" class="headerlink" title="资源限制角度绕过WAF"></a>资源限制角度绕过WAF</h2><p>这是众所周知、而又难以解决的问题。如果HTTP请求POST BODY太大，检测所有的内容，WAF集群消耗太大的CPU、内存资源。因此许多WAF只检测前面的几K字节、1M、或2M。对于攻击者而然，只需要在POST BODY前面添加许多无用数据，把攻击payload放在最后即可绕过WAF检测。</p>
+<h2 id="协议层面绕过WAF的检测"><a href="#协议层面绕过WAF的检测" class="headerlink" title="协议层面绕过WAF的检测"></a>协议层面绕过WAF的检测</h2><p>即使流量都确保经过WAF，如果WAF的防御策略根本就没有检测payload，那么也就能绕过WAF。协议层面绕过WAF，利用WAF解析协议的问题，使得payload被认为不是请求的HTTP请求的内容。从经验总结出WAF解析协议的常出现问题的三个方向。</p>
+<ul>
+<li>协议覆盖不全。</li>
+<li>协议解析不正确。</li>
+<li>协议解析与后WEB容器的协议解析不一致。</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-24T03:07:33.000Z">2018-07-24</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 minutes read (About 710 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/24/Web-Development%E2%80%94%E2%80%94WebSocket/">Web Development——WebSocket</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h1><p>WebSocket是HTML5开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。</p>
+<p>在WebSocket API中，浏览器和服务器只需要做一个握手的动作，然后，浏览器和服务器之间就形成了一条快速通道。两者之间就直接可以数据互相传送。</p>
+<p>浏览器通过 JavaScript 向服务器发出建立 WebSocket 连接的请求，连接建立以后，客户端和服务器端就可以通过 TCP 连接直接交换数据。</p>
+<p>当你获取 Web Socket 连接后，你可以通过 send() 方法来向服务器发送数据，并通过 onmessage 事件来接收服务器返回的数据。</p>
+<p>以下 API 用于创建 WebSocket 对象：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Socket = <span class="keyword">new</span> WebSocket(url, [protocol] );</span><br></pre></td></tr></table></figure>
+
+<p>以上代码中的第一个参数 url, 指定连接的 URL。第二个参数 protocol 是可选的，指定了可接受的子协议。</p>
+<h2 id="WebSocket-实例"><a href="#WebSocket-实例" class="headerlink" title="WebSocket 实例"></a>WebSocket 实例</h2><p>WebSocket 协议本质上是一个基于 TCP 的协议。</p>
+<p>为了建立一个 WebSocket 连接，客户端浏览器首先要向服务器发起一个 HTTP 请求，这个请求和通常的 HTTP 请求不同，包含了一些附加头信息，其中附加头信息”Upgrade: WebSocket”表明这是一个申请协议升级的 HTTP 请求，服务器端解析这些附加的头信息然后产生应答信息返回给客户端，客户端和服务器端的 WebSocket 连接就建立起来了，双方就可以通过这个连接通道自由的传递信息，并且这个连接会持续存在直到客户端或者服务器端的某一方主动的关闭连接。</p>
+<h3 id="客户端的-HTML-和-JavaScript"><a href="#客户端的-HTML-和-JavaScript" class="headerlink" title="客户端的 HTML 和 JavaScript"></a>客户端的 HTML 和 JavaScript</h3><p>目前大部分浏览器支持 WebSocket() 接口，你可以在以下浏览器中尝试实例： Chrome, Mozilla, Opera 和 Safari。</p>
+<p>runoob_websocket.html 文件内容</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>菜鸟教程(runoob.com)<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="actionscript">        <span class="function"><span class="keyword">function</span> <span class="title">WebSocketTest</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">if</span> (<span class="string">"WebSocket"</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">"您的浏览器支持 WebSocket!"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">                <span class="comment">// 打开一个 web socket</span></span></span><br><span class="line"><span class="actionscript">                <span class="keyword">var</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">"ws://localhost:8080/"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">                ws.onopen = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">                    <span class="comment">// Web Socket 已连接上，使用 send() 方法发送数据</span></span></span><br><span class="line"><span class="actionscript">                    ws.send(<span class="string">"客户端发送数据"</span>);</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(<span class="string">"数据发送中&gt;&gt;&gt;"</span>);</span></span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">                ws.onmessage = <span class="function"><span class="keyword">function</span> <span class="params">(evt)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">                    <span class="keyword">var</span> received_msg = evt.data;</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log( evt)</span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(<span class="string">"数据接受成功...."</span>)</span></span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">                ws.onclose = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">                    <span class="comment">// 关闭 websocket</span></span></span><br><span class="line"><span class="javascript">                    <span class="built_in">console</span>.log(<span class="string">"连接已关闭..."</span>);</span></span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">            <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="actionscript">                <span class="comment">// 浏览器不支持 WebSocket</span></span></span><br><span class="line"><span class="javascript">                <span class="built_in">console</span>.log(<span class="string">"您的浏览器不支持 WebSocket!"</span>);</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"sse"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:WebSocketTest()"</span>&gt;</span>运行 WebSocket<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="WebSocket-服务端"><a href="#WebSocket-服务端" class="headerlink" title="WebSocket 服务端"></a>WebSocket 服务端</h3><p>这里可以借助node.js的　<em>nodejs-websocket</em>　npm包搭建服务。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ws = <span class="built_in">require</span>(<span class="string">"nodejs-websocket"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Scream server example: "hi" -&gt; "HI!!!"</span></span><br><span class="line"><span class="keyword">var</span> server = ws.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">conn</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"New connection"</span>)</span><br><span class="line">    conn.on(<span class="string">"text"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">str</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Received "</span>+str)</span><br><span class="line">        conn.sendText(str.toUpperCase()+<span class="string">"!!!"</span>)</span><br><span class="line">        conn.sendText(<span class="string">"Second phase"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    conn.on(<span class="string">"close"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">code, reason</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Connection closed"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;).listen(<span class="number">8080</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Refernce"><a href="#Refernce" class="headerlink" title="Refernce"></a>Refernce</h2><p><a href="http://www.runoob.com/html/html5-websocket.html">http://www.runoob.com/html/html5-websocket.html</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-23T10:37:09.000Z">2018-07-23</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 minutes read (About 2866 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/23/ElasticSearch%E2%80%94%E2%80%94Java-API/">ElasticSearch——Java API</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="ElasticSearch-JAVA-API-DSL-Query"><a href="#ElasticSearch-JAVA-API-DSL-Query" class="headerlink" title="ElasticSearch JAVA API: DSL Query"></a>ElasticSearch JAVA API: DSL Query</h1><h2 id="精确查找"><a href="#精确查找" class="headerlink" title="精确查找"></a>精确查找</h2><p>当进行精确值查找时， 我们会使用过滤器（filters）。过滤器很重要，因为它们执行速度非常快，不会计算相关度（直接跳过了整个评分阶段）而且很容易被缓存。我们会在本章后面的 过滤器缓存 中讨论过滤器的性能优势，不过现在只要记住：请尽可能多的使用过滤式查询。</p>
+<p>通常当查找一个精确值的时候，我们不希望对查询进行评分计算。只希望对文档进行包括或排除的计算，所以我们会使用 constant_score 查询以非评分模式来执行 term 查询并以一作为统一评分。</p>
+<p>最终组合的结果是一个 constant_score 查询，它包含一个 term 查询：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET /my_store/products/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span> : &#123;</span><br><span class="line">        <span class="attr">"constant_score"</span> : &#123;</span><br><span class="line">            <span class="attr">"filter"</span> : &#123;</span><br><span class="line">                <span class="attr">"term"</span> : &#123;</span><br><span class="line">                    <span class="attr">"price"</span> : <span class="number">20</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Java API对应实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// version6.3</span></span><br><span class="line">SearchResponse response = requestBuilder.setQuery(QueryBuilders.constantScoreQuery(</span><br><span class="line">                QueryBuilder.termsQuery(<span class="string">"price"</span>, <span class="number">20</span>)</span><br><span class="line">        )).setSize(<span class="number">100</span>).execute().actionGet();</span><br></pre></td></tr></table></figure>
+
+<h2 id="精确查找文本"><a href="#精确查找文本" class="headerlink" title="精确查找文本"></a>精确查找文本</h2><p>对文本进行精确查找时，会出现问题，如果在索引数据时，没有指定<strong>not_analyzed</strong>。那么在索引时，文本会被分词：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /my_store/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"field"</span>: <span class="string">"productID"</span>,</span><br><span class="line">  <span class="attr">"text"</span>: <span class="string">"XHDK-A-1293-#fJ3"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tokens"</span> : [ &#123;</span><br><span class="line">    <span class="attr">"token"</span> :        <span class="string">"xhdk"</span>,</span><br><span class="line">    <span class="attr">"start_offset"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="attr">"end_offset"</span> :   <span class="number">4</span>,</span><br><span class="line">    <span class="attr">"type"</span> :         <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">    <span class="attr">"position"</span> :     <span class="number">1</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">"token"</span> :        <span class="string">"a"</span>,</span><br><span class="line">    <span class="attr">"start_offset"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="attr">"end_offset"</span> :   <span class="number">6</span>,</span><br><span class="line">    <span class="attr">"type"</span> :         <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">    <span class="attr">"position"</span> :     <span class="number">2</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">"token"</span> :        <span class="string">"1293"</span>,</span><br><span class="line">    <span class="attr">"start_offset"</span> : <span class="number">7</span>,</span><br><span class="line">    <span class="attr">"end_offset"</span> :   <span class="number">11</span>,</span><br><span class="line">    <span class="attr">"type"</span> :         <span class="string">"&lt;NUM&gt;"</span>,</span><br><span class="line">    <span class="attr">"position"</span> :     <span class="number">3</span></span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    <span class="attr">"token"</span> :        <span class="string">"fj3"</span>,</span><br><span class="line">    <span class="attr">"start_offset"</span> : <span class="number">13</span>,</span><br><span class="line">    <span class="attr">"end_offset"</span> :   <span class="number">16</span>,</span><br><span class="line">    <span class="attr">"type"</span> :         <span class="string">"&lt;ALPHANUM&gt;"</span>,</span><br><span class="line">    <span class="attr">"position"</span> :     <span class="number">4</span></span><br><span class="line">  &#125; ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了避免这种情况，可以在索引的时候指定 <strong>not_analyzed</strong></p>
+<h2 id="查找多个精确值"><a href="#查找多个精确值" class="headerlink" title="查找多个精确值"></a>查找多个精确值</h2><p>不需要使用多个 term 查询，我们只要用单个 terms 查询（注意末尾的 s ）， terms 查询好比是 term 查询的复数形式（以英语名词的单复数做比）。</p>
+<p>它几乎与 term 的使用方式一模一样，与指定单个价格不同，我们只要将 term 字段的值改为数组即可：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"terms"</span> : &#123;</span><br><span class="line">        <span class="attr">"price"</span> : [<span class="number">20</span>, <span class="number">30</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应Java API实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">values.add(<span class="number">20</span>);</span><br><span class="line">values.add(<span class="number">30</span>);</span><br><span class="line">SearchResponse response = requestBuilder.setQuery(QueryBuilders.constantScoreQuery(</span><br><span class="line">        QueryBuilders.termsQuery(<span class="string">"price"</span>, values)</span><br><span class="line">)).setSize(<span class="number">100</span>).execute().actionGet();</span><br></pre></td></tr></table></figure>
+
+<h2 id="SearchType"><a href="#SearchType" class="headerlink" title="SearchType"></a>SearchType</h2><p>es在查询时，可以指定搜索类型为:</p>
+<p>QUERY_THEN_FETCH,QUERY_AND_FEATCH,DFS_QUERY_THEN_FEATCH和DFS_QUERY_AND_FEATCH（SACN,COUNT都已不建议使用）。那么这4种搜索类型有什么区别？</p>
+<p>elasticsearch java api中还有个default</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> SearchType DEFAULT = QUERY_THEN_FETCH;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分布式搜索过程"><a href="#分布式搜索过程" class="headerlink" title="分布式搜索过程"></a>分布式搜索过程</h3><p>一个搜索请求必须询问我们关注的索引（index or indices）的所有分片的某个副本来确定它们是否含有任何匹配的文档。</p>
+<p>但是找到所有的匹配文档仅仅完成事情的一半。 在 search 接口返回一个 <code>page</code> 结果之前，多分片中的结果必须组合成单个排序列表。 为此，搜索被执行成一个两阶段过程，我们称之为 query then fetch 。</p>
+<h3 id="查询阶段"><a href="#查询阶段" class="headerlink" title="查询阶段"></a>查询阶段</h3><p>在初始 查询阶段 时， 查询会广播到索引中每一个分片拷贝（主分片或者副本分片）。 每个分片在本地执行搜索并构建一个匹配文档的 _优先队列_。</p>
+<p><img src="/images/query.png" alt="query"></p>
+<p>查询阶段包含以下三个步骤:</p>
+<ol>
+<li>客户端发送一个 search 请求到 Node 3 ， Node 3 会创建一个大小为 from + size 的空优先队列。</li>
+<li>Node 3 将查询请求转发到索引的每个主分片或副本分片中。每个分片在本地执行查询并添加结果到大小为 from + size 的本地有序优先队列中。</li>
+<li>每个分片返回各自优先队列中所有文档的 ID 和排序值给协调节点，也就是 Node 3 ，它合并这些值到自己的优先队列中来产生一个全局排序后的结果列表。</li>
+</ol>
+<p>当一个搜索请求被发送到某个节点时，这个节点就变成了协调节点。 这个节点的任务是广播查询请求到所有相关分片并将它们的响应整合成全局排序后的结果集合，这个结果集合会返回给客户端。</p>
+<p>第一步是广播请求到索引中每一个节点的分片拷贝。就像 document GET requests 所描述的， 查询请求可以被某个主分片或某个副本分片处理， 这就是为什么更多的副本（当结合更多的硬件）能够增加搜索吞吐率。 协调节点将在之后的请求中轮询所有的分片拷贝来分摊负载。</p>
+<p>每个分片在本地执行查询请求并且创建一个长度为 from + size 的优先队列—也就是说，每个分片创建的结果集足够大，均可以满足全局的搜索请求。 分片返回一个轻量级的结果列表到协调节点，它仅包含文档 ID 集合以及任何排序需要用到的值，例如 _score 。</p>
+<p>协调节点将这些分片级的结果合并到自己的有序优先队列里，它代表了全局排序结果集合。至此查询过程结束。</p>
+<blockquote>
+<p>一个索引可以由一个或几个主分片组成， 所以一个针对单个索引的搜索请求需要能够把来自多个分片的结果组合起来。 针对 multiple 或者 all 索引的搜索工作方式也是完全一致的–仅仅是包含了更多的分片而已。</p>
+</blockquote>
+<h3 id="取回阶段"><a href="#取回阶段" class="headerlink" title="取回阶段"></a>取回阶段</h3><p>查询阶段标识哪些文档满足 搜索请求，但是我们仍然需要取回这些文档。</p>
+<p><img src="/images/fetch.png" alt="fetch"></p>
+<p>分布式阶段由以下步骤构成：</p>
+<ol>
+<li>协调节点辨别出哪些文档需要被取回并向相关的分片提交多个 GET 请求。</li>
+<li>每个分片加载并 丰富 文档，如果有需要的话，接着返回文档给协调节点。</li>
+<li>一旦所有的文档都被取回了，协调节点返回结果给客户端。</li>
+</ol>
+<p>协调节点首先决定哪些文档 确实 需要被取回。例如，如果我们的查询指定了 { “from”: 90, “size”: 10 } ，最初的90个结果会被丢弃，只有从第91个开始的10个结果需要被取回。这些文档可能来自和最初搜索请求有关的一个、多个甚至全部分片。</p>
+<p>协调节点给持有相关文档的每个分片创建一个 multi-get request ，并发送请求给同样处理查询阶段的分片副本。</p>
+<p>分片加载文档体– _source 字段–如果有需要，用元数据和 search snippet highlighting 丰富结果文档。 一旦协调节点接收到所有的结果文档，它就组装这些结果为单个响应返回给客户端。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>第一、数量问题。比如，用户需要搜索”双黄连”，要求返回最符合条件的前10条。但在5个分片中，可能都存储着双黄连相关的数据。所以ES会向这5个分片都发出查询请求，并且要求每个分片都返回符合条件的10条记录。当ES得到返回的结果后，进行整体排序，然后取最符合条件的前10条返给用户。这种情况，ES5个shard最多会收到10*5=50条记录，这样返回给用户的结果数量会多于用户请求的数量。</p>
+<p>第二、排名问题。上面搜索，每个分片计算分值都是基于自己的分片数据进行计算的。计算分值使用的词频率和其他信息都是基于自己的分片进行的，而ES进行整体排名是基于每个分片计算后的分值进行排序的，这就可能会导致排名不准确的问题。如果我们想更精确的控制排序，应该先将计算排序和排名相关的信息（词频率等）从5个分片收集上来，进行统一计算，然后使用整体的词频率去每个分片进行查询。</p>
+<p>这两个问题，估计ES也没有什么较好的解决方法，最终把选择的权利交给用户，方法就是在搜索的时候指定query type。</p>
+<ol>
+<li><strong>query and fetch</strong><br>向索引的所有分片（shard）都发出查询请求，各分片返回的时候把元素文档（document）和计算后的排名信息一起返回。这种搜索方式是最快的。因为相比下面的几种搜索方式，这种查询方法只需要去shard查询一次。但是各个shard返回的结果的数量之和可能是用户要求的size的n倍。</li>
+<li><strong>query then fetch（默认的搜索方式）</strong><br>如果你搜索时，没有指定搜索方式，就是使用的这种搜索方式。这种搜索方式，大概分两个步骤，第一步，先向所有的shard发出请求，各分片只返回排序和排名相关的信息（注意，不包括文档document)，然后按照各分片返回的分数进行重新排序和排名，取前size个文档。然后进行第二步，去相关的shard取document。这种方式返回的document可能是用户要求的size的n倍</li>
+<li><strong>DFS query and fetch</strong><br>这种方式比第一种方式多了一个初始化散发(initial scatter)步骤，有这一步，据说可以更精确控制搜索打分和排名。这种方式返回的document与用户要求的size是相等的。</li>
+<li><strong>DFS query then fetch</strong><br>比第2种方式多了一个初始化散发(initial scatter)步骤。这种方式返回的document与用户要求的size是相等的。</li>
+</ol>
+<h3 id="DSF是什么缩写？初始化散发是一个什么样的过程？"><a href="#DSF是什么缩写？初始化散发是一个什么样的过程？" class="headerlink" title="DSF是什么缩写？初始化散发是一个什么样的过程？"></a>DSF是什么缩写？初始化散发是一个什么样的过程？</h3><p>从es的官方网站我们可以指定，初始化散发其实就是在进行真正的查询之前，先把各个分片的词频率和文档频率收集一下，然后进行词搜索的时候，各分片依据全局的词频率和文档频率进行搜索和排名。显然如果使用DFS_QUERY_THEN_FETCH这种查询方式，效率是最低的，因为一个搜索，可能要请求3次分片。但，使用DFS方法，搜索精度应该是最高的。<br>至于DFS是什么缩写，没有找到相关资料，这个D可能是Distributed，F可能是frequency的缩写，至于S可能是Scatter的缩写，整个单词可能是分布式词频率和文档频率散发的缩写。<br>总结一下，从性能考虑QUERY_AND_FETCH是最快的，DFS_QUERY_THEN_FETCH是最慢的。从搜索的准确度来说，DFS要比非DFS的准确度更高。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_query_phase.html">https://www.elastic.co/guide/cn/elasticsearch/guide/current/_query_phase.html</a></p>
+<p><a href="https://blog.csdn.net/wangmaohong0717/article/details/53433146">https://blog.csdn.net/wangmaohong0717/article/details/53433146</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-23T09:17:06.000Z">2018-07-23</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    12 minutes read (About 1744 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/23/ElasticSearch%E2%80%94%E2%80%94Lucene-Scoring/">ElasticSearch——Lucene Scoring</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="Lucene的实用评分函数"><a href="#Lucene的实用评分函数" class="headerlink" title="Lucene的实用评分函数"></a>Lucene的实用评分函数</h1><p>对于多词查询， Lucene 使用 布尔模型（Boolean model） 、 TF/IDF 以及 向量空间模型（vector space model） ，然后将它们组合到单个高效的包里以收集匹配文档并进行评分计算。</p>
+<p>一个多词查询</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"match"</span>: &#123;</span><br><span class="line">      <span class="attr">"text"</span>: <span class="string">"quick fox"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>会在内部被重写为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /my_index/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"should"</span>: [</span><br><span class="line">        &#123;<span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"quick"</span> &#125;&#125;,</span><br><span class="line">        &#123;<span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"fox"</span>   &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bool 查询实现了布尔模型，在这个例子中，它会将包括词 quick 和 fox 或两者兼有的文档作为查询结果。</p>
+<p>只要一个文档与查询匹配，Lucene 就会为查询计算评分，然后合并每个匹配词的评分结果。这里使用的评分计算公式叫做 实用评分函数（practical scoring function） 。看似很高大上，但是别被吓到——多数的组件都已经介绍过，下一步会讨论它引入的一些新元素。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">score(q,d)  &#x3D;  </span><br><span class="line">            queryNorm(q)  </span><br><span class="line">          · coord(q,d)</span><br><span class="line">          · ∑ (</span><br><span class="line">                tf(t in d)</span><br><span class="line">              · idf(t)²</span><br><span class="line">              · t.getBoost()</span><br><span class="line">              · norm(t,d)</span><br><span class="line">            ) (t in q)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>score(q,d) 是文档 d 与查询 q 的相关度评分。</p>
+<p>queryNorm(q) 是 查询归一化 因子 （新）。</p>
+<p>coord(q,d) 是 协调 因子 （新）。</p>
+<p>tf(t in d) 是词 t 在文档 d 中的 词频 。</p>
+<p>idf(t) 是词 t 的 逆向文档频率 。</p>
+<p>t.getBoost() 是查询中使用的 boost（新）。</p>
+<p>norm(t,d) 是 字段长度归一值 ，与 索引时字段层 boost （如果存在）的和（新）。</p>
+</blockquote>
+<p>上节已介绍过 score 、 tf 和 idf 。现在来介绍 queryNorm 、 coord 、 t.getBoost 和 norm 。</p>
+<p>我们会在本章后面继续探讨 查询时的权重提升 的问题，但是首先需要了解查询归一化、协调和索引时字段层面的权重提升等概念。</p>
+<h2 id="查询归一因子"><a href="#查询归一因子" class="headerlink" title="查询归一因子"></a>查询归一因子</h2><p>查询归一因子 （ queryNorm ）试图将查询 归一化 ， 这样就能将两个不同的查询结果相比较。</p>
+<blockquote>
+<p>尽管查询归一值的目的是为了使查询结果之间能够相互比较，但是它并不十分有效，因为相关度评分 _score 的目的是为了将当前查询的结果进行排序，比较不同查询结果的相关度评分没有太大意义。</p>
+</blockquote>
+<p>这个因子是在查询过程的最前面计算的，具体的计算依赖于具体查询，一个典型的实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queryNorm &#x3D; 1 &#x2F; √sumOfSquaredWeights</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>sumOfSquaredWeights 是查询里每个词的 IDF 的平方和。</p>
+<p>相同查询归一化因子会被应用到每个文档，不能被更改，总而言之，可以被忽略。</p>
+</blockquote>
+<h2 id="查询协调"><a href="#查询协调" class="headerlink" title="查询协调"></a>查询协调</h2><p>协调因子 （ coord ） 可以为那些查询词包含度高的文档提供奖励，文档里出现的查询词越多，它越有机会成为好的匹配结果。</p>
+<p>设想查询 quick brown fox ，每个词的权重都是 1.5 。如果没有协调因子，最终评分会是文档里所有词权重的总和。例如：</p>
+<ul>
+<li>文档里有 fox → 评分： 1.5</li>
+<li>文档里有 quick fox → 评分： 3.0</li>
+<li>文档里有 quick brown fox → 评分： 4.5</li>
+</ul>
+<p>协调因子将评分与文档里匹配词的数量相乘，然后除以查询里所有词的数量，如果使用协调因子，评分会变成：</p>
+<ul>
+<li>文档里有 fox → 评分： 1.5 * 1 / 3 = 0.5</li>
+<li>文档里有 quick fox → 评分： 3.0 * 2 / 3 = 2.0</li>
+<li>文档里有 quick brown fox → 评分： 4.5 * 3 / 3 = 4.5</li>
+</ul>
+<p>协调因子能使包含所有三个词的文档比只包含两个词的文档评分要高出很多。</p>
+<p>回想将查询 quick brown fox 重写成 bool 查询的形式：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"should"</span>: [</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"quick"</span> &#125;&#125;,</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"brown"</span> &#125;&#125;,</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"fox"</span>   &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bool 查询默认会对所有 should 语句使用协调功能，不过也可以将其禁用。为什么要这样做？通常的回答是——无须这样。查询协调通常是件好事，当使用 bool 查询将多个高级查询如 match 查询包裹的时候，让协调功能开启是有意义的，匹配的语句越多，查询请求与返回文档间的重叠度就越高。</p>
+<p>但在某些高级应用中，将协调功能关闭可能更好。设想正在查找同义词 jump 、 leap 和 hop 时，并不关心会出现多少个同义词，因为它们都表示相同的意思，实际上，只有其中一个同义词会出现，这是不使用协调因子的一个好例子：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"bool"</span>: &#123;</span><br><span class="line">      <span class="attr">"disable_coord"</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">"should"</span>: [</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"jump"</span> &#125;&#125;,</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"hop"</span>  &#125;&#125;,</span><br><span class="line">        &#123; <span class="attr">"term"</span>: &#123; <span class="attr">"text"</span>: <span class="string">"leap"</span> &#125;&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当使用同义词的时候（参照： 同义词 ），Lucene 内部是这样的：重写的查询会禁用同义词的协调功能。 大多数禁用操作的应用场景是自动处理的，无须为此担心。</p>
+<h2 id="索引时字段层权重提升"><a href="#索引时字段层权重提升" class="headerlink" title="索引时字段层权重提升"></a>索引时字段层权重提升</h2><p>我们会讨论 查询时的权重提升，让字段 权重提升 就是让某个字段比其他字段更重要。 当然在索引时也能做到如此。实际上，权重的提升会被应用到字段的每个词，而不是字段本身。</p>
+<p>将提升值存储在索引中无须更多空间，这个字段层索引时的提升值与字段长度归一值（参见 字段长度归一值 ）一起作为单个字节存于索引， norm(t,d) 是前面公式的返回值。</p>
+<blockquote>
+<p>我们不建议在建立索引时对字段提升权重，有以下原因：</p>
+<ul>
+<li>将提升值与字段长度归一值合在单个字节中存储会丢失字段长度归一值的精度，这样会导致 Elasticsearch 不知如何区分包含三个词的字段和包含五个词的字段。</li>
+<li>要想改变索引时的提升值，就必须重新为所有文档建立索引，与此不同的是，查询时的提升值可以随着每次查询的不同而更改。</li>
+<li>如果一个索引时权重提升的字段有多个值，提升值会按照每个值来自乘，这会导致该字段的权重急剧上升。</li>
+</ul>
+<p>查询时赋予权重 是更为简单、清楚、灵活的选择。</p>
+</blockquote>
+<p>了解了查询归一化、协同和索引时权重提升这些方式后，可以进一步了解相关度计算最有用的工具：查询时的权重提升。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/practical-scoring-function.html">https://www.elastic.co/guide/cn/elasticsearch/guide/current/practical-scoring-function.html</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-07-23T08:23:45.000Z">2018-07-23</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 minutes read (About 2135 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/07/23/ElasticSearch%E2%80%94%E2%80%94scoring-theory/">ElasticSearch——scoring-theory</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="ElasticSearch-scoring-theory"><a href="#ElasticSearch-scoring-theory" class="headerlink" title="ElasticSearch scoring theory"></a>ElasticSearch scoring theory</h1><p>Lucene（或 Elasticsearch）使用 <em>布尔模型</em>（Boolean model） 查找匹配文档， 并用一个名为 <em>实用评分函数</em>（practical scoring function） 的公式来计算相关度。这个公式借鉴了 <em>词频/逆向文档频率</em>（term frequency/inverse document frequency） 和 <em>向量空间模型</em>（vector space model），同时也加入了一些现代的新特性，如协调因子（coordination factor），字段长度归一化（field length normalization），以及词或查询语句权重提升。</p>
+<h2 id="布尔模型"><a href="#布尔模型" class="headerlink" title="布尔模型"></a>布尔模型</h2><p>布尔模型（Boolean Model） 只是在查询中使用 AND 、 OR 和 NOT （与、或和非）这样的条件来查找匹配的文档，以下查询：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">full AND text AND search AND (elasticsearch OR lucene)</span><br></pre></td></tr></table></figure>
+
+<p>会将所有包括词 full 、 text 和 search ，以及 elasticsearch 或 lucene 的文档作为结果集。</p>
+<p>这个过程简单且快速，它将所有可能不匹配的文档排除在外。</p>
+<h2 id="词频-逆向文档频率-TF-IDF"><a href="#词频-逆向文档频率-TF-IDF" class="headerlink" title="词频/逆向文档频率(TF/IDF)"></a>词频/逆向文档频率(TF/IDF)</h2><p>当匹配到一组文档后，需要根据相关度排序这些文档，不是所有的文档都包含所有词，有些词比其他的词更重要。一个文档的相关度评分部分取决于每个查询词在文档中的 权重 。</p>
+<p>词的权重由三个因素决定.</p>
+<h3 id="词频"><a href="#词频" class="headerlink" title="词频"></a>词频</h3><p>词在文档中出现的频度是多少？ 频度越高，权重 越高 。 5 次提到同一词的字段比只提到 1 次的更相关。词频的计算方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf(t in d) &#x3D; √frequency</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>词 t 在文档 d 的词频（ tf ）是该词在文档中出现次数的平方根。</p>
+</blockquote>
+<p>如果不在意词在某个字段中出现的频次，而只在意是否出现过，则可以在字段映射中禁用词频统计：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"doc"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"text"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>:          <span class="string">"string"</span>,</span><br><span class="line">          <span class="attr">"index_options"</span>: <span class="string">"docs"</span> </span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>将参数 index_options 设置为 docs 可以禁用词频统计及词频位置，这个映射的字段不会计算词的出现次数，对于短语或近似查询也不可用。要求精确查询的 not_analyzed 字符串字段会默认使用该设置。</p>
+</blockquote>
+<h3 id="逆向文档频率"><a href="#逆向文档频率" class="headerlink" title="逆向文档频率"></a>逆向文档频率</h3><p>词在集合所有文档里出现的频率是多少？频次越高，权重 越低 。 常用词如 and 或 the 对相关度贡献很少，因为它们在多数文档中都会出现，一些不常见词如 elastic 或 hippopotamus 可以帮助我们快速缩小范围找到感兴趣的文档。逆向文档频率的计算公式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">idf(t) &#x3D; 1 + log ( numDocs &#x2F; (docFreq + 1))</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>词 t 的逆向文档频率（ idf ）是：索引中文档数量除以所有包含该词的文档数，然后求其对数。</p>
+</blockquote>
+<h3 id="字段长度归一值"><a href="#字段长度归一值" class="headerlink" title="字段长度归一值"></a>字段长度归一值</h3><p>字段的长度是多少？ 字段越短，字段的权重 越高 。如果词出现在类似标题 title 这样的字段，要比它出现在内容 body 这样的字段中的相关度更高。字段长度的归一值公式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">norm(d) &#x3D; 1 &#x2F; √numTerms</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>字段长度归一值（ norm ）是字段中词数平方根的倒数。</p>
+</blockquote>
+<p>字段长度的归一值对全文搜索非常重要， 许多其他字段不需要有归一值。无论文档是否包括这个字段，索引中每个文档的每个 string 字段都大约占用 1 个 byte 的空间。对于 not_analyzed 字符串字段的归一值默认是禁用的，而对于 analyzed 字段也可以通过修改字段映射禁用归一值：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"doc"</span>: &#123;</span><br><span class="line">      <span class="attr">"properties"</span>: &#123;</span><br><span class="line">        <span class="attr">"text"</span>: &#123;</span><br><span class="line">          <span class="attr">"type"</span>: <span class="string">"string"</span>,</span><br><span class="line">          <span class="attr">"norms"</span>: &#123; <span class="attr">"enabled"</span>: <span class="literal">false</span> &#125; </span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这个字段不会将字段长度归一值考虑在内，长字段和短字段会以相同长度计算评分。</p>
+</blockquote>
+<p>对于有些应用场景如日志，归一值不是很有用，要关心的只是字段是否包含特殊的错误码或者特定的浏览器唯一标识符。字段的长度对结果没有影响，禁用归一值可以节省大量内存空间。</p>
+<h3 id="结合使用"><a href="#结合使用" class="headerlink" title="结合使用"></a>结合使用</h3><p>以下三个因素——词频（term frequency）、逆向文档频率（inverse document frequency）和字段长度归一值（field-length norm）——是在索引时计算并存储的。 最后将它们结合在一起计算单个词在特定文档中的 <em>权重</em> 。</p>
+<blockquote>
+<p>前面公式中提到的 文档 实际上是指文档里的某个字段，每个字段都有它自己的倒排索引，因此字段的 TF/IDF 值就是文档的 TF/IDF 值。</p>
+</blockquote>
+<p>当用 explain 查看一个简单的 term 查询时（参见 explain ），可以发现与计算相关度评分的因子就是前面章节介绍的这些：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PUT /my_index/doc/1</span><br><span class="line">&#123; <span class="attr">"text"</span> : <span class="string">"quick brown fox"</span> &#125;</span><br><span class="line"></span><br><span class="line">GET /my_index/doc/_search?explain</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"term"</span>: &#123;</span><br><span class="line">      <span class="attr">"text"</span>: <span class="string">"fox"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上请求（简化）的 explanation 解释如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">weight(text:fox in 0) [PerFieldSimilarity]:  0.15342641 //词 fox 在文档的内部 Lucene doc ID 为 0 ，字段是 text 里的最终评分。</span><br><span class="line">result of:</span><br><span class="line">    fieldWeight in 0                         0.15342641</span><br><span class="line">    product of:</span><br><span class="line">        tf(freq=1.0), with freq of 1:        1.0  //词 fox 在该文档 text 字段中只出现了一次。</span><br><span class="line">        idf(docFreq=1, maxDocs=1):           0.30685282  //fox 在所有文档 text 字段索引的逆向文档频率。</span><br><span class="line">        fieldNorm(doc=0):                    0.5  //	</span><br><span class="line">该字段的字段长度归一值。</span><br></pre></td></tr></table></figure>
+
+<p>当然，查询通常不止一个词，所以需要一种合并多词权重的方式——向量空间模型（vector space model）。</p>
+<h2 id="向量空间模型"><a href="#向量空间模型" class="headerlink" title="向量空间模型"></a>向量空间模型</h2><p><em>向量空间模型（vector space model）</em> 提供一种比较多词查询的方式，单个评分代表文档与查询的匹配程度，为了做到这点，这个模型将文档和查询都以 <em>向量（vectors）</em> 的形式表示：</p>
+<p>向量实际上就是包含多个数的一维数组，例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1,2,5,22,3,8]</span><br></pre></td></tr></table></figure>
+
+<p>在向量空间模型里， 向量空间模型里的每个数字都代表一个词的 <em>权重</em> ，与 词频/逆向文档频率（term frequency/inverse document frequency） 计算方式类似。</p>
+<blockquote>
+<p>尽管 TF/IDF 是向量空间模型计算词权重的默认方式，但不是唯一方式。Elasticsearch 还有其他模型如 Okapi-BM25 。TF/IDF 是默认的因为它是个经检验过的简单又高效的算法，可以提供高质量的搜索结果。</p>
+</blockquote>
+<p>设想如果查询 “happy hippopotamus” ，常见词 happy 的权重较低，不常见词 hippopotamus 权重较高，假设 happy 的权重是 2 ， hippopotamus 的权重是 5 ，可以将这个二维向量—— [2,5] ——在坐标系下作条直线，线的起点是 (0,0) 终点是 (2,5) ，如下图 “表示 “happy hippopotamus” 的二维查询向量” 。</p>
+<p><img src="/images/vsc.png" alt="vsc"></p>
+<p>现在，设想我们有三个文档：</p>
+<ol>
+<li>I am happy in summer 。</li>
+<li>After Christmas I’m a hippopotamus 。</li>
+<li>The happy hippopotamus helped Harry 。</li>
+</ol>
+<p>可以为每个文档都创建包括每个查询词—— happy 和 hippopotamus ——权重的向量，然后将这些向量置入同一个坐标系中，如图 图 28 ““happy hippopotamus” 查询及文档向量” ：</p>
+<ul>
+<li>文档 1： (happy,<strong><strong>____</strong></strong>) —— [2,0]</li>
+<li>文档 2： ( ___ ,hippopotamus) —— [0,5]</li>
+<li>文档 3： (happy,hippopotamus) —— [2,5]</li>
+</ul>
+<p><img src="images/vsc_2.png" alt="..."></p>
+<p>向量之间是可以比较的，只要测量查询向量和文档向量之间的角度就可以得到每个文档的相关度，文档 1 与查询之间的角度最大，所以相关度低；文档 2 与查询间的角度较小，所以更相关；文档 3 与查询的角度正好吻合，完全匹配。</p>
+<blockquote>
+<p>在实际中，只有二维向量（两个词的查询）可以在平面上表示，幸运的是， 线性代数 ——作为数学中处理向量的一个分支——为我们提供了计算两个多维向量间角度工具，这意味着可以使用如上同样的方式来解释多个词的查询。关于比较两个向量的更多信息可以参考 余弦近似度（cosine similarity）。</p>
+</blockquote>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model">https://www.elastic.co/guide/cn/elasticsearch/guide/current/scoring-theory.html#boolean-model</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/">Previous</a>
+        </div>
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/page/3/">Next</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/">1</a></li>
+            
+            <li><a class="pagination-link is-current" href="/page/2/">2</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/3/">3</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/4/">4</a></li>
+            
+        </ul>
+    </nav>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/WechatIMG32.jpeg" alt="NatsumeHill">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        NatsumeHill
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Nube
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Spcae</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            32
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            0
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            27
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/NatsumeHill" target="_blank" rel="noopener">
+                Follow</a>
+        </div>
+        
+        
+        
+    </div>
+</div>
+    
+        
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/HTTPS-openSSL/" style="font-size: 10px;">-HTTPS -openSSL</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/DL/" style="font-size: 10px;">DL</a> <a href="/tags/Docker/" style="font-size: 12.5px;">Docker</a> <a href="/tags/ElasticSearch/" style="font-size: 17.5px;">ElasticSearch</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JDBC/" style="font-size: 10px;">JDBC</a> <a href="/tags/Java/" style="font-size: 12.5px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Next/" style="font-size: 10px;">Next</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/OpenWAF/" style="font-size: 10px;">OpenWAF</a> <a href="/tags/Spring/" style="font-size: 10px;">Spring</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/Tomcat-%E5%AE%89%E8%A3%85/" style="font-size: 10px;">Tomcat 安装</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/WAF/" style="font-size: 10px;">WAF</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 10px;">WebSocket</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 10px;">事务</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">前端框架及工具</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">学习笔记</a>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-03T06:41:55.000Z">2019-09-03</time></div>
+                    <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库事务</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/Mybatis-Note/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T08:05:43.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/Mybatis-Note/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Mybatis Note</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/01/openssl-cook-book/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-01T05:57:05.000Z">2018-12-01</time></div>
+                    <a href="/2018/12/01/openssl-cook-book/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Openssl Cook Book</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T12:17:59.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第四篇（Swarms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T09:51:19.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第三篇（Services）</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">September 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/gallery/thumbnails/wallhaven-lmk1vq.png" alt="数据库事务">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-03T06:41:55.000Z">2019-09-03</time></div>
+                    <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库事务</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/Mybatis-Note/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Mybatis Note">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T08:05:43.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/Mybatis-Note/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Mybatis Note</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/01/openssl-cook-book/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Openssl Cook Book">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-01T05:57:05.000Z">2018-12-01</time></div>
+                    <a href="/2018/12/01/openssl-cook-book/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Openssl Cook Book</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第四篇（Swarms）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T12:17:59.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第四篇（Swarms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Docker入门-第三篇（Services）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T09:51:19.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E4%B8%89%E7%AF%87%EF%BC%88Services%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第三篇（Services）</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">September 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="NatsumeHill&#39;s blog" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 NatsumeHill&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://natsumehill.github.io',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
