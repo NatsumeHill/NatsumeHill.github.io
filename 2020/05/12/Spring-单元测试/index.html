@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Spring 单元测试 - NatsumeHill&#39;s blog</title>
+
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/favicon.jpeg" alt="Spring 单元测试" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-image">
+        <span  class="image is-7by1">
+            <img class="thumbnail" src="http://139.180.138.188/photo-1589273423503-7e57126ad579?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=axel-ahoi-hjEesK4KSDs-unsplash.jpg&amp;w=1920" alt="Spring 单元测试">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-05-12T10:23:23.000Z">2020-05-12</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Spring-Framework/">Spring Framework</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    24 minutes read (About 3668 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Spring 单元测试
+            
+        </h1>
+        <div class="content">
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Spring框架中最基础的模块时Spring IoC，当我们使用Spring IoC统一管理配置项目中的Java bean时，按照Spring官方文档，可以通过两种方式进行配置。<br>一种是Java Config，使用Java代码进行编程式配置。另一种是XML文件配置方式。对于Spring Boot而言，就是直接采取Java Config进行自动化配置。对于不同的配置方式，使用Junit进行单元测试时，有稍微的不同。</p>
+<h2 id="Junit基本知识点"><a href="#Junit基本知识点" class="headerlink" title="Junit基本知识点"></a>Junit基本知识点</h2><p>如果读者只是希望了解如何创建基于Junit的单元测试，可以跳过本节内容，本节内容旨在理清Junit的基本执行过程。当我们在使用IDE进行项目开发时，创建Junit单元测试比较简单，可以直接在目录结构中测试类指定文件夹下创建类，并在实现了具体测试逻辑的方法上添加<code>@Test</code>注解。<br>之后IDE会自动解析类文件，用户通过点击执行图标就可以执行测试了。下面是一个简单的测试类示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对SimpleApp的简要单元测试测试</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleAppTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 测试SimpleApp的greeting()方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">greeting</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Assert.assertEquals(<span class="string">"Hello junit"</span>, <span class="keyword">new</span> SimpleApp().greeting());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>IDE方便了用户编写测试类，用户可以专注于测试逻辑的实现。但是对于Junit的入门使用者来说，太过于透明，以至于使用者不能理解背后的原理。</p>
+<h3 id="测试类如何被执行的？"><a href="#测试类如何被执行的？" class="headerlink" title="测试类如何被执行的？"></a>测试类如何被执行的？</h3><p>用户编写的Junit测试类都是通过<code>JunitCore</code>类启动执行的。具体时使用方式可以是通过命令行执行或者直接调用各种<code>run()</code>方法，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JUnitCore.runClasses(MyTestClass<span class="class">.<span class="keyword">class</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>JunitCore</code>通过反射机制找到合适的<code>Runner</code>来执行测试类。这个查找的过程第一步便是解析被执行测试类的<code>@RunWith</code>注解，该注解的参数表示测试类指定的<code>Runner</code>。<br>如果没有通过<code>@RunWith</code>注解指定<code>Runner</code>，则会使用默认的<code>Runner</code>（<code>BlockJunit4RunnerClass</code>）。确定了<code>Runner</code>之后，会对其进行示例化，并将测试类传递给<code>Runner</code>。最后测试类的示例话和执行就交给<code>Runner</code>完成。</p>
+<h2 id="本文中用于测试的项目简介"><a href="#本文中用于测试的项目简介" class="headerlink" title="本文中用于测试的项目简介"></a>本文中用于测试的项目简介</h2><p>本文的测试目标项目是一个简单的Demo，只有两个接口，分别是：</p>
+<ul>
+<li><code>GET /user/get?name=</code>，根据名称查找用户信息；</li>
+<li><code>POST /login/do</code>，简单登录接口，不做任何验证，接口被调用后在Session中设置UUID。</li>
+</ul>
+<p>登录接口主要是为了方便模拟登录的测试讲解。项目的目录结构如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── AnnotationApp.java</span><br><span class="line">├── SimpleApp.java</span><br><span class="line">├── XmlApp.java</span><br><span class="line">├── common</span><br><span class="line">├── core</span><br><span class="line">├── po</span><br><span class="line">├── repositories</span><br><span class="line">├── rest</span><br><span class="line">└── service</span><br></pre></td></tr></table></figure>
+<p>项目通过Java Config和Xml方式配置，<code>AnnotationApp</code>是基于ava Config的配置类，<code>core.WebConfig.class</code>类是Spring MVC Java Config风格的配置。项目已经上传直笔者<a href="https://github.com/NatsumeHill/junit-learn">GitHub</a>。</p>
+<h2 id="在测试中启用Spring-IoC"><a href="#在测试中启用Spring-IoC" class="headerlink" title="在测试中启用Spring IoC"></a>在测试中启用Spring IoC</h2><p>当我们在创建单元测试时，如果希望使用Spring IoC提供的依赖管理完成对测试目标类的实例化，则需要使用订制化的<code>Runner</code>。Spring框架已经实现了特定的<code>Runner</code>，以便在测试之前启动Spring IoC容器。这里，我们需要在项目中添加相关依赖（Spring Test），下面是gradle格式的依赖：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testImplementation group: <span class="string">'org.springframework'</span>, name: <span class="string">'spring-test'</span>, version: <span class="string">'4.3.26.RELEASE'</span></span><br></pre></td></tr></table></figure>
+
+<p>Spring Test实现了<code>SpringJUnit4ClassRunner</code>来执行测试类，这个<code>Runner</code>还有一个别名<code>SpringRunner</code>，通过查看源码可以发现<code>SpringRunner</code>直接继承了<code>SpringJUnit4ClassRunner</code>，但是没有添加或者修改任何初始化逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringRunner</span> <span class="keyword">extends</span> <span class="title">SpringJUnit4ClassRunner</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Construct a new &#123;<span class="doctag">@code</span> SpringRunner&#125; and initialize a</span></span><br><span class="line"><span class="comment">	 * &#123;<span class="doctag">@link</span> org.springframework.test.context.TestContextManager TestContextManager&#125;</span></span><br><span class="line"><span class="comment">	 * to provide Spring testing functionality to standard JUnit 4 tests.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> clazz the test class to be run</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #createTestContextManager(Class)</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">SpringRunner</span><span class="params">(Class&lt;?&gt; clazz)</span> <span class="keyword">throws</span> InitializationError </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(clazz);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基于Java-Config的单元测试创建"><a href="#基于Java-Config的单元测试创建" class="headerlink" title="基于Java Config的单元测试创建"></a>基于Java Config的单元测试创建</h3><p>当项目使用Java Config时，对于除了Spring MVC之外的其它Java Bean的测试类如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于Java Config的Service类测试示例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@RunWith</span>(SpringRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= AnnotationApp<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">UserServiceImplTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService&lt;UserPo&gt; userService;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        log.info(userService.getUser(<span class="keyword">new</span> UserPo(<span class="string">"kiki"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>)).toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如代码所示，需要通过<code>@RunWith</code>注解指明<code>Runner</code>。此外还需要通过注解<code>@ContextConfiguration</code>告诉<code>Runner</code>Spring IoC的配置类（被<code>@Configuration</code>注解的类），这里的配置类可能有多个，这个需要根据自己项目中Java Config分散的位置进行选择。添加好这些注解之后，在测试类中就可以直接使用Spring IoC提供的功能。即是可以通过依赖注入实例化相关类。</p>
+<h3 id="基于Xml配置的单元测试创建"><a href="#基于Xml配置的单元测试创建" class="headerlink" title="基于Xml配置的单元测试创建"></a>基于Xml配置的单元测试创建</h3><p>当项目使用Xml进行配置时，对Spring MVC之外的ava Bean的测试类如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于Xml配置的测试环境初始化基类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@RunWith</span>(SpringRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">locations</span> </span>= &#123;<span class="string">"classpath:/spring/bean.xml"</span>, <span class="string">"classpath:/spring/repositories.xml"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XmlConfigTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService&lt;UserPo&gt; userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">userServiceTest</span><span class="params">()</span></span>&#123;</span><br><span class="line">        log.info(userService.getUser(<span class="keyword">new</span> UserPo(<span class="string">"kiki"</span>, <span class="keyword">null</span>, <span class="keyword">null</span>)).toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据代码，其实Xml和Java Config唯一的差别在于注解<code>@ContextConfiguration</code>的参数设置。对于Xml方式，我们需要设置<code>locations</code>参数来告诉<code>Runner</code>Spring<br>相关配置文件的位置。</p>
+<h2 id="对Spring-MVC进行单元测试"><a href="#对Spring-MVC进行单元测试" class="headerlink" title="对Spring MVC进行单元测试"></a>对Spring MVC进行单元测试</h2><p>开发过程中或者项目调试时可能需要对Controller层进行测试，虽然可以通过PostMan等类似HTTP客户端进行发起请求测试，但是笔者更偏向于编程式的测试方式。<br>Spring Test提供了<code>MockMvc</code>类对Controller进行测试，如同在测试过程中初始化Spring IoC一样，编写Controller的测试类时，需要告诉<code>Runner</code> Spring MVC的配置文件地址，同时需要添加<code>@WebAppConfiguration</code>注解表明要初始化Web应用配置。如下是Java Config风格的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Java Config风格的Spring MVC测试基类，其它测试类可以直接继承该类</span></span><br><span class="line"><span class="comment"> * 减少代码冗余</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RunWith</span>(SpringRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">@<span class="title">WebAppConfiguration</span></span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">classes</span> </span>= &#123;AnnotationApp<span class="class">.<span class="keyword">class</span>, <span class="title">WebConfig</span>.<span class="title">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">WebApplicationTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">protected</span> WebApplicationContext context;</span><br><span class="line">    <span class="keyword">protected</span> MockMvc mockMvc;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123;</span><br><span class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 空测试，防止报错</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">empty</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的测试类不承担任何具体类的测试任务，作为一个基类完成初始化任务，下面是对<code>IndexController</code>的测试:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexControllerTest</span> <span class="keyword">extends</span> <span class="title">WebApplicationTest</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">index</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        mockMvc.perform(get(<span class="string">"/"</span>))</span><br><span class="line">                <span class="comment">//响应状态码比对</span></span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                <span class="comment">//响应文本比对</span></span><br><span class="line">        .andExpect(content().string(<span class="string">"Hello junit"</span>))</span><br><span class="line">        .andDo(print());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上面的代码所示，通过<code>MockMvc</code>的实例，调用<code>perform</code>方法请求Controller对应的url。<code>get</code>方法表示使用<code>GET</code>方式发送请求。然后通过<code>andExpect</code>方法对请求结果进行匹配验证，<code>status()*</code>方法是对响应状态码进行验证，<code>ontent()</code>是对响应内容进行匹配。<code>andDo()</code>方法是对请求结果的后续处理，这里使用<code>print()</code>方法通过标准输出打印请求以及响应内容。</p>
+<p>对于使用Xml配置Spring MVC的情况，只需要修改<code>@ContextConfiguration</code>中配置文件参数。具体示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Xml风格配置测试类初始化基类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RunWith</span>(SpringRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">// 配置文件需要包含<span class="title">spring</span> <span class="title">mvc</span>的配置文件</span></span><br><span class="line"><span class="class">@<span class="title">ContextConfiguration</span>(<span class="title">locations</span> </span>= &#123;<span class="string">"classpath:/spring/*"</span>&#125;)</span><br><span class="line"><span class="meta">@WebAppConfiguration</span>(value = <span class="string">"src/main/web"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XmlWebApplicationTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">protected</span> WebApplicationContext context;</span><br><span class="line">    <span class="keyword">protected</span> MockMvc mockMvc;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123;</span><br><span class="line">        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">empty</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当请求时需要添加额外参数时，可以在调用<code>get()</code>方法或者<code>post()</code>方法时，调用相关方法添加参数。</p>
+<ul>
+<li><code>param()</code>方法添加url参数；</li>
+<li><code>content()</code>方法设置请求体，如Json、form表单等；</li>
+<li><code>requestAttr()</code>方法可以添加容器内servlet间参数；</li>
+</ul>
+<p>下面的代码示例是对<code>/user/get?name</code>接口的测试类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过继承包含模拟登录逻辑的测试类，实现测试前完成登录</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserControllerTest</span> <span class="keyword">extends</span> <span class="title">WebApplicationWithSessionTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        mockMvc.perform(get(<span class="string">"/user/get"</span>)</span><br><span class="line">                <span class="comment">// 添加url参数</span></span><br><span class="line">                .param(<span class="string">"name"</span>, <span class="string">"kiki"</span>)</span><br><span class="line">                <span class="comment">// 添加servlet参数，可以通过HttpServletRequest.getAttribute()方法获取</span></span><br><span class="line">                .requestAttr(<span class="string">"auth_token"</span>,<span class="string">"easy_token"</span>)</span><br><span class="line">                <span class="comment">// 带上登录session</span></span><br><span class="line">                .session(session))</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andDo(print());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>/user/get?name=</code>接口中，笔者添加了获取<code>requestAttr</code>的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/get"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getUser</span><span class="params">(@RequestParam String name, HttpServletRequest request)</span></span>&#123;</span><br><span class="line">    log.info(<span class="string">"request param: name="</span> + name);</span><br><span class="line">    Object attribute = request.getAttribute(<span class="string">"auth_token"</span>);</span><br><span class="line">    <span class="keyword">if</span>(attribute != <span class="keyword">null</span>)&#123;</span><br><span class="line">        log.info(<span class="string">"You got token:"</span> + attribute.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    List&lt;UserPo&gt; userPoList = userService.getUser(<span class="keyword">new</span> UserPo(name, <span class="keyword">null</span>, <span class="keyword">null</span>));</span><br><span class="line">    <span class="keyword">if</span>(userPoList == <span class="keyword">null</span>)&#123;</span><br><span class="line">        userPoList = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> userPoList.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行上面的测试类的结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[2020-05-12 22:28:59.448] [Test worker] INFO  c.n.l.r.WebApplicationWithSessionTest : You got login session: bc19085e2024469f8e2b6ab3f7b0b8e0</span><br><span class="line">[2020-05-12 22:28:59.468] [Test worker] INFO  c.n.learn.rest.UserController : request param: name=kiki</span><br><span class="line">[2020-05-12 22:28:59.468] [Test worker] INFO  c.n.learn.rest.UserController : You got token:easy_token</span><br><span class="line">[2020-05-12 22:28:59.509] [Test worker] INFO  o.h.h.i.QueryTranslatorFactoryInitiator : HHH000397: Using ASTQueryTranslatorFactory</span><br></pre></td></tr></table></figure>
+
+<p>如上面执行结果所示，在第三行输出中，Controller已经获取到在测试类中传入的<code>auth_token</code>参数。</p>
+<h2 id="模拟登录以及Session保持"><a href="#模拟登录以及Session保持" class="headerlink" title="模拟登录以及Session保持"></a>模拟登录以及Session保持</h2><p>当在对Controller进行测试时，可能需要获取登录Session中的数据，或者在保留登录拦截器的情况下，完成模拟登录并进行指定接口的测试。<br>模拟登录的示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 模拟登录验证示例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebApplicationWithSessionTest</span> <span class="keyword">extends</span> <span class="title">WebApplicationTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> MockHttpSession session;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Before</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        session = ((MockHttpSession) login());</span><br><span class="line">        log.info(<span class="string">"You got login session: "</span> + session.getAttribute(Common.SESSION_KEY).toString());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> HttpSession <span class="title">login</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        MvcResult result = mockMvc.perform(post(<span class="string">"/login/do"</span>))</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andDo(print())</span><br><span class="line">                .andReturn();</span><br><span class="line">        <span class="keyword">return</span> result.getRequest().getSession();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">empty</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上面代码所示，该类主要负责完成模拟登录，不承担任何测试任务。在这个类中，添加了一个属性<code>MockHttpSession</code>。这个属性用于保存Session属性，可以直接通过这个类在请求中添加Session数据。在上面的<code>login()</code>方法中，主要完成模拟登录，并将登录成功之后的Session赋值给<code>MockHttpSession</code>。这样在测试的时候，可以直接在请求时，带上Session，保持登录状态。</p>
+<p>本文中测试目标项目中的登录拦截如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 简易登录拦截</span></span><br><span class="line"><span class="comment"> * file: com/natsumehill/learn/core/LoginInterceptor.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginInterceptor</span> <span class="keyword">extends</span> <span class="title">HandlerInterceptorAdapter</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        HttpSession session = request.getSession();</span><br><span class="line">        <span class="keyword">if</span>(session.getAttribute(Common.SESSION_KEY) != <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="comment">// 如果没有登录，直接返回HTTP-403</span></span><br><span class="line">        response.sendError(HttpServletResponse.SC_FORBIDDEN);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上面的代码，当没有登录时，请求会直接返回HTTP-403状态码。如下面的测试用例，没有进行模拟登录，测试不会通过：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 不进行模拟登录进行测试</span></span><br><span class="line"><span class="comment"> * 只是示例，这个测试不会成功</span></span><br><span class="line"><span class="comment"> * file： com/natsumehill/learn/rest/UserControllerTest.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserControllerTest</span> <span class="keyword">extends</span> <span class="title">WebApplicationTest</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        mockMvc.perform(get(<span class="string">"/user/get"</span>)</span><br><span class="line">                <span class="comment">// 添加url参数</span></span><br><span class="line">                .param(<span class="string">"name"</span>, <span class="string">"kiki"</span>)</span><br><span class="line">                <span class="comment">// 添加servlet参数，可以通过HttpServletRequest.getAttribute()方法获取</span></span><br><span class="line">                .requestAttr(<span class="string">"auth_token"</span>,<span class="string">"easy_token"</span>))</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andDo(print());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的测试用例执行结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Status expected:&lt;200&gt; but was:&lt;403&gt;</span><br><span class="line">Expected :200</span><br><span class="line">Actual   :403</span><br><span class="line">&lt;Click to see difference&gt;</span><br><span class="line"></span><br><span class="line">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;403&gt;</span><br><span class="line">	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:54)</span><br><span class="line">	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:81)</span><br><span class="line">	at org.springframework.test.web.servlet.result.StatusResultMatchers$10.match(StatusResultMatchers.java:665)</span><br><span class="line">	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:164)</span><br></pre></td></tr></table></figure>
+
+<p>使用模拟登录保持Session进行测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过继承包含模拟登录逻辑的测试类，实现测试前完成登录</span></span><br><span class="line"><span class="comment"> * file： com/natsumehill/learn/rest/UserControllerWithSessionTest.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserControllerWithSessionTest</span> <span class="keyword">extends</span> <span class="title">WebApplicationWithSessionTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        mockMvc.perform(get(<span class="string">"/user/get"</span>)</span><br><span class="line">                <span class="comment">// 添加url参数</span></span><br><span class="line">                .param(<span class="string">"name"</span>, <span class="string">"kiki"</span>)</span><br><span class="line">                <span class="comment">// 添加servlet参数，可以通过HttpServletRequest.getAttribute()方法获取</span></span><br><span class="line">                .requestAttr(<span class="string">"auth_token"</span>,<span class="string">"easy_token"</span>)</span><br><span class="line">                <span class="comment">// 带上登录session</span></span><br><span class="line">                .session(session))</span><br><span class="line">                .andExpect(status().isOk())</span><br><span class="line">                .andDo(print());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的测试类在发起请求时，提供了登录Session，测试会执行成功。</p>
+<h2 id="Mockito的使用"><a href="#Mockito的使用" class="headerlink" title="Mockito的使用"></a>Mockito的使用</h2><p>文章前面提到的测试方式，都是需要初始化Spring IoC配置以及Spring MVC的配置，从严格意义上讲，这些测试不是真正的单元测试，而是对多个模块协调测试的集成测试。在开发过程中，为了方便测试，可能只希望对测试目标类单独测试（真正的单元测试）。在这种场景中，我们可以通过模拟测试目标所依赖类的行为来进行测试，有很多框架能够实现这一目的。本文简要讲解Mockito的基本使用。</p>
+<p>下面是通过Mockito对<code>UserService</code>进行单元测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 使用Mockito模拟其它组件，这样就不需要启动Spring IoC</span></span><br><span class="line"><span class="comment"> * file： com/natsumehill/learn/service/MockitoUserServiceImplTest.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="comment">// 初始化，完成注解解析</span></span><br><span class="line"><span class="meta">@RunWith</span>(MockitoJUnitRunner<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">MockitoUserServiceImplTest</span> </span>&#123;</span><br><span class="line">    <span class="comment">// UserService 依赖于UserRepositories，通过@Mock来模拟</span></span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> UserRepositories repositories;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 需要注入模拟对象的目标类</span></span><br><span class="line">    <span class="meta">@InjectMocks</span></span><br><span class="line">    <span class="keyword">private</span> UserServiceImpl userService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*@Before</span></span><br><span class="line"><span class="comment">    public void setup()&#123;</span></span><br><span class="line"><span class="comment">        MockitoAnnotations.initMocks(this);</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 模拟UserRepositories的行为，当指定方法被调用且参数一致时，返回模拟结果</span></span><br><span class="line">        when(repositories.findByName(<span class="string">"kiki"</span>))</span><br><span class="line">                .thenReturn(<span class="keyword">new</span> ArrayList&lt;UserPo&gt;()&#123;&#123;</span><br><span class="line">                    add(<span class="keyword">new</span> UserPo(<span class="string">"kiki"</span>,<span class="keyword">null</span>,<span class="string">"9999999"</span>));</span><br><span class="line">                &#125;&#125;);</span><br><span class="line">        log.info(userService.getUser(<span class="keyword">new</span> UserPo(<span class="string">"kiki"</span>,<span class="keyword">null</span>, <span class="keyword">null</span>)).toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上面代码所示，在需要进行模拟的对象上面添加@Mock注解，需要注入模拟对象的目标用@InjectMocks注解。<br>在所有测试之前通过<code>MockitoAnnotations.initMocks(this);</code>进行模拟对象初始化及注入。<br>可以通过直接在类上面添加<code>@RunWith(MockitoJUnitRunner.class)</code>注解，这样就不必显式初始化。<br>上面的代码中<code>UserServiceImpl</code>依赖于<code>UserRepositories</code>，通过使用Mockito就不需要实例化<code>UserRepositories</code>，甚至该类的所有方法的具体逻辑都和该测试无关。<br>通过<code>when()</code>方法指定当被模拟对象的方法调用时，执行什么操作。这里通过<code>thenReturn()</code>方法指定调用后的返回值。注意这里<code>when()</code>中的方法调用会匹配到具体的参数。</p>
+<p>这个注解通过查看源码可以知道，runner实例化时会调用初始化过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">JUnit45AndHigherRunnerImpl</span><span class="params">(Class&lt;?&gt; klass)</span> <span class="keyword">throws</span> InitializationError </span>&#123;</span><br><span class="line">    runner = <span class="keyword">new</span> BlockJUnit4ClassRunner(klass) &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Statement <span class="title">withBefores</span><span class="params">(FrameworkMethod method, Object target,</span></span></span><br><span class="line"><span class="function"><span class="params">                Statement statement)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// init annotated mocks before tests</span></span><br><span class="line">            MockitoAnnotations.initMocks(target);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.withBefores(method, target, statement);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用链如下：<br><code>MockitoJunitRunner()-&gt;RunnerFactory().create(klass)-&gt;JUnit45AndHigherRunnerImpl(Class&lt;?&gt; klass)</code></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><blockquote>
+<p>MockMvc <a href="https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/html/integration-testing.html#spring-mvc-test-framework">https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/html/integration-testing.html#spring-mvc-test-framework</a></p>
+</blockquote>
+<blockquote>
+<p>Mockito <a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html">https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html</a></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Java/" rel="tag">Java</a>, <a class="has-link-grey -link" href="/tags/Spring/" rel="tag">Spring</a>, <a class="has-link-grey -link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/">
+                <span class="level-item">数据库事务</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: 'add73d54392abb3bc509',
+        clientSecret: '415d459ace1d9dc7b6679645ba3570cff836669a',
+        id: '37cc898cd76f5edb2c572c6e6e0b83e7',
+        repo: 'NatsumeHill.github.io',
+        owner: 'NatsumeHill',
+        admin: ["NatsumeHill"],
+        createIssueManually: false,
+        distractionFreeMode: false
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/favicon.jpeg" alt="NatsumeHill">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        NatsumeHill
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Nube
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Spcae</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            33
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            17
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            27
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/NatsumeHill" target="_blank" rel="noopener">
+                Follow</a>
+        </div>
+        
+        
+        
+    </div>
+</div>
+    
+        
+
+    <div class="card widget" id="toc">
+        <div class="card-content">
+            <div class="menu">
+                <h3 class="menu-label">
+                    Catalogue
+                </h3>
+                <ul class="menu-list"><li>
+        <a class="is-flex" href="#概述">
+        <span class="has-mr-6">1</span>
+        <span>概述</span>
+        </a></li><li>
+        <a class="is-flex" href="#Junit基本知识点">
+        <span class="has-mr-6">2</span>
+        <span>Junit基本知识点</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#测试类如何被执行的？">
+        <span class="has-mr-6">2.1</span>
+        <span>测试类如何被执行的？</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#本文中用于测试的项目简介">
+        <span class="has-mr-6">3</span>
+        <span>本文中用于测试的项目简介</span>
+        </a></li><li>
+        <a class="is-flex" href="#在测试中启用Spring-IoC">
+        <span class="has-mr-6">4</span>
+        <span>在测试中启用Spring IoC</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#基于Java-Config的单元测试创建">
+        <span class="has-mr-6">4.1</span>
+        <span>基于Java Config的单元测试创建</span>
+        </a></li><li>
+        <a class="is-flex" href="#基于Xml配置的单元测试创建">
+        <span class="has-mr-6">4.2</span>
+        <span>基于Xml配置的单元测试创建</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#对Spring-MVC进行单元测试">
+        <span class="has-mr-6">5</span>
+        <span>对Spring MVC进行单元测试</span>
+        </a></li><li>
+        <a class="is-flex" href="#模拟登录以及Session保持">
+        <span class="has-mr-6">6</span>
+        <span>模拟登录以及Session保持</span>
+        </a></li><li>
+        <a class="is-flex" href="#Mockito的使用">
+        <span class="has-mr-6">7</span>
+        <span>Mockito的使用</span>
+        </a></li><li>
+        <a class="is-flex" href="#Reference">
+        <span class="has-mr-6">8</span>
+        <span>Reference</span>
+        </a></li></ul>
+            </div>
+        </div>
+    </div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">September 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">August 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">11</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/12/Spring-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1589273423503-7e57126ad579?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=axel-ahoi-hjEesK4KSDs-unsplash.jpg&amp;w=1920" alt="Spring 单元测试">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-12T10:23:23.000Z">2020-05-12</time></div>
+                    <a href="/2020/05/12/Spring-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Spring 单元测试</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Spring-Framework/">Spring Framework</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=christopher-gower-m_HRfLhgABo-unsplash.jpg&amp;w=1920" alt="数据库事务">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-03T06:41:55.000Z">2019-09-03</time></div>
+                    <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库事务</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Mysql/">Mysql</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/Mybatis-Note/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1483736762161-1d107f3c78e1?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=tobias-fischer-PkbZahEG2Ng-unsplash.jpg&amp;w=1920" alt="Mybatis Note">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T08:05:43.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/Mybatis-Note/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Mybatis Note</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/MyBatis/">MyBatis</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/01/openssl-cook-book/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1568533309250-4eecd31bcfeb?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=christian-englmeier-g3f4p_eAb1M-unsplash.jpg&amp;w=1920" alt="Openssl Cook Book">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-01T05:57:05.000Z">2018-12-01</time></div>
+                    <a href="/2018/12/01/openssl-cook-book/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Openssl Cook Book</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%96%87%E7%8C%AE%E7%BF%BB%E8%AF%91/">文献翻译</a> / <a class="has-link-grey -link" href="/categories/%E6%96%87%E7%8C%AE%E7%BF%BB%E8%AF%91/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1542719741-60c837eebcd0?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=handy-wicaksono-qXwbygKtl9g-unsplash.jpg&amp;w=1920" alt="Docker入门-第四篇（Swarms）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T12:17:59.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第四篇（Swarms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Docker/">Docker</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/HTTPS-openSSL/" style="font-size: 10px;">-HTTPS -openSSL</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/DL/" style="font-size: 10px;">DL</a> <a href="/tags/Docker/" style="font-size: 14px;">Docker</a> <a href="/tags/ElasticSearch/" style="font-size: 18px;">ElasticSearch</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JDBC/" style="font-size: 10px;">JDBC</a> <a href="/tags/Java/" style="font-size: 16px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 16px;">JavaScript</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Next/" style="font-size: 10px;">Next</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/OpenWAF/" style="font-size: 10px;">OpenWAF</a> <a href="/tags/Spring/" style="font-size: 12px;">Spring</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/Tomcat-%E5%AE%89%E8%A3%85/" style="font-size: 10px;">Tomcat 安装</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/WAF/" style="font-size: 10px;">WAF</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 10px;">WebSocket</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 10px;">事务</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">前端框架及工具</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">学习笔记</a>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/05/12/Spring-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1589273423503-7e57126ad579?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=axel-ahoi-hjEesK4KSDs-unsplash.jpg&amp;w=1920" alt="Spring 单元测试">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-12T10:23:23.000Z">2020-05-12</time></div>
+                    <a href="/2020/05/12/Spring-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Spring 单元测试</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Spring-Framework/">Spring Framework</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=christopher-gower-m_HRfLhgABo-unsplash.jpg&amp;w=1920" alt="数据库事务">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-03T06:41:55.000Z">2019-09-03</time></div>
+                    <a href="/2019/09/03/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库事务</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Mysql/">Mysql</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/Mybatis-Note/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1483736762161-1d107f3c78e1?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=tobias-fischer-PkbZahEG2Ng-unsplash.jpg&amp;w=1920" alt="Mybatis Note">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T08:05:43.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/Mybatis-Note/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Mybatis Note</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/MyBatis/">MyBatis</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/01/openssl-cook-book/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1568533309250-4eecd31bcfeb?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=christian-englmeier-g3f4p_eAb1M-unsplash.jpg&amp;w=1920" alt="Openssl Cook Book">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-01T05:57:05.000Z">2018-12-01</time></div>
+                    <a href="/2018/12/01/openssl-cook-book/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Openssl Cook Book</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E6%96%87%E7%8C%AE%E7%BF%BB%E8%AF%91/">文献翻译</a> / <a class="has-link-grey -link" href="/categories/%E6%96%87%E7%8C%AE%E7%BF%BB%E8%AF%91/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://139.180.138.188/photo-1542719741-60c837eebcd0?ixlib=rb-1.2.1&amp;q=80&amp;fm=jpg&amp;crop=entropy&amp;cs=tinysrgb&amp;dl=handy-wicaksono-qXwbygKtl9g-unsplash.jpg&amp;w=1920" alt="Docker入门-第四篇（Swarms）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-08-28T12:17:59.000Z">2018-08-28</time></div>
+                    <a href="/2018/08/28/Docker%E5%85%A5%E9%97%A8-%E7%AC%AC%E5%9B%9B%E7%AF%87%EF%BC%88Swarms%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Docker入门-第四篇（Swarms）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a> / <a class="has-link-grey -link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/Docker/">Docker</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/HTTPS-openSSL/" style="font-size: 10px;">-HTTPS -openSSL</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/DL/" style="font-size: 10px;">DL</a> <a href="/tags/Docker/" style="font-size: 14px;">Docker</a> <a href="/tags/ElasticSearch/" style="font-size: 18px;">ElasticSearch</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/JDBC/" style="font-size: 10px;">JDBC</a> <a href="/tags/Java/" style="font-size: 16px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 16px;">JavaScript</a> <a href="/tags/Mybatis/" style="font-size: 10px;">Mybatis</a> <a href="/tags/Next/" style="font-size: 10px;">Next</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OS/" style="font-size: 10px;">OS</a> <a href="/tags/OpenWAF/" style="font-size: 10px;">OpenWAF</a> <a href="/tags/Spring/" style="font-size: 12px;">Spring</a> <a href="/tags/Spring-Boot/" style="font-size: 10px;">Spring Boot</a> <a href="/tags/Tensorflow/" style="font-size: 10px;">Tensorflow</a> <a href="/tags/Tomcat-%E5%AE%89%E8%A3%85/" style="font-size: 10px;">Tomcat 安装</a> <a href="/tags/Ubuntu/" style="font-size: 10px;">Ubuntu</a> <a href="/tags/WAF/" style="font-size: 10px;">WAF</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 10px;">WebSocket</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/%E4%BA%8B%E5%8A%A1/" style="font-size: 10px;">事务</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%89%8D%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%B7%A5%E5%85%B7/" style="font-size: 10px;">前端框架及工具</a> <a href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" style="font-size: 20px;">学习笔记</a>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/favicon.jpeg" alt="Spring 单元测试" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 NatsumeHill&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://natsumehill.com',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
